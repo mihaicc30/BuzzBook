@@ -1,15 +1,15 @@
-import React from "react";
-import { Outlet, Route, Routes, useLocation } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebaseConfig";
+import React from "react"
+import { Outlet, Route, Routes, useLocation } from "react-router-dom"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "../firebaseConfig"
 
-import Auth from "../pages/Auth";
-import Dashboard from "../pages/Dashboard";
-import Navbar from "./Navbar";
+import Auth from "../pages/Auth"
+import Dashboard from "../pages/Dashboard"
+import Navbar from "./Navbar"
 
 const Paths = () => {
-  const [user] = useAuthState(auth);
-  const loc = useLocation();
+  const [user, loading, error] = useAuthState(auth)
+  const loc = useLocation()
   return (
     <Routes>
       <Route
@@ -23,14 +23,8 @@ const Paths = () => {
           </div>
         }
       >
-        <Route
-          path="/"
-          element={<Auth />}
-        />
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+        <Route path="/" element={<Auth />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route
           path="/activity"
           element={<RiderActivity />}
@@ -47,13 +41,10 @@ const Paths = () => {
           path="/account"
           element={<RiderAccount />}
         /> */}
-        <Route
-          path="*"
-          element={<Auth />}
-        />
+        <Route path="*" element={<Auth />} />
       </Route>
     </Routes>
-  );
-};
+  )
+}
 
-export default Paths;
+export default Paths
