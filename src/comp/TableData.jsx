@@ -20,10 +20,10 @@ export const TableData = ({ venueData, tables, section, hours }) => {
   console.log(assignedSlots)
   return (
     <Suspense fallback={"Loading"}>
-      {tables.map((tn) => (
+      {tables.map((tn, indx) => (
         <Fragment key={crypto.randomUUID()}>
-          <div className="grid grid-flow-col auto-cols-[50px] h-12 items-center border-b-2 border-b-black/[2%]">
-            <span className="tableName sticky flex justify-center items-center left-0 z-1 whitespace-nowrap bg-white h-full">{tn}</span>
+          <div className={`grid grid-flow-col auto-cols-[70px] h-12 items-center border-b-2 border-b-black/[2%] ${indx % 2 == 0 ? "bg-white" : "bg-gray-100/50"} `}>
+            <span className={`tableName sticky flex justify-center items-center left-0 z-1 whitespace-nowrap h-full`}>{tn}</span>
 
             {hours.map((hour, index) => (
               <Fragment key={crypto.randomUUID()}>
@@ -37,11 +37,23 @@ export const TableData = ({ venueData, tables, section, hours }) => {
                       if (bookedTimes.includes(time)) {
                         console.log("time is", time)
                         return (
-                          <span key={crypto.randomUUID()} className={`tableData flex items-center h-[30px] w-full text-xs bg-blue-300 border-2`} style={{ gridColumn: `span ${entry.bookedSlots} / span ${entry.bookedSlots}` }} title={`${section} ${tn} ${time}`}>
-                            <div className="flex flex-nowrap justify-between px-2">
-                              <div className={`flex flex-nowrap gap-x-2 px-[2px]`}>
-                                <p>{entry.pax}</p>
-                                <p>{entry.name}</p>
+                          <span key={crypto.randomUUID()} className={`tableData flex items-center h-[30px] w-full text-xs bg-blue-200 rounded `} style={{ gridColumn: `span ${entry.bookedSlots} / span ${entry.bookedSlots}` }} title={`${section} ${tn} ${time}`}>
+                            <div className="flex flex-nowrap justify-between items-center w-full">
+                              <div className={`flex flex-nowrap items-center gap-x-2`}>
+                                <div className="flex items-center">
+                                  <span className="text-lg h-full mx-[2px] px-1 font-[600]">x{entry.pax}</span>
+                                  <span className="text-ellipsis line-clamp-1 font-[600] ml-[2px]" title={entry.name}>
+                                    {entry.name}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className={`flex flex-nowrap items-center`}>
+                                <div className={`${entry.cardConfirmed ? "" : "opacity-[0.2]"} text-lg`} title={`Card Confirmation: ${entry.cardConfirmed}`}>
+                                  💳
+                                </div>
+                                <div className={`${entry.message ? "" : "opacity-[0.2]"} text-lg`} title={`Message: ${entry.message}`}>
+                                  ✉
+                                </div>
                               </div>
                             </div>
                           </span>
