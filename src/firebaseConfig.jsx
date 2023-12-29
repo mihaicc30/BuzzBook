@@ -65,7 +65,7 @@ const logOut = () => {
 //   venueNdate: `testVenueID ${new Date().toLocaleDateString("en-GB")}`,
 //   bookings: [
 //     {
-//       id:"someRandomID1",
+//       id: "someRandomID3",
 //       startTime: "7:15",
 //       bookedSlots: "5",
 //       bookedTimes: ["7:15", "7:30", "7:45", "8:00", "8:15", "8:30"],
@@ -73,9 +73,11 @@ const logOut = () => {
 //       email: "someemail@com",
 //       phone: "1123412341",
 //       cardConfirmed: false,
+//       message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
+//       pax: 4,
 //       assignedSlot: {
-//         Section1: {
-//           T1: {
+//         Restaurant: {
+//           T3: {
 //             startTime: "7:15",
 //             bookedSlots: "5",
 //             bookedTimes: ["7:15", "7:30", "7:45", "8:00", "8:15", "8:30"]
@@ -84,7 +86,7 @@ const logOut = () => {
 //       }
 //     },
 //     {
-//       id:"someRandomID2",
+//       id: "someRandomID4",
 //       startTime: "9:15",
 //       bookedSlots: "5",
 //       bookedTimes: ["9:15", "9:30", "9:45", "10:00", "10:15", "10:30"],
@@ -92,8 +94,10 @@ const logOut = () => {
 //       email: "someemail@com",
 //       phone: "1123412341",
 //       cardConfirmed: false,
+//       message: "",
+//       pax: 3,
 //       assignedSlot: {
-//         Section1: {
+//         Restaurant: {
 //           T1: {
 //             startTime: "9:15",
 //             bookedSlots: "5",
@@ -101,6 +105,48 @@ const logOut = () => {
 //           }
 //         }
 //       }
+//     },
+//     {
+//       id: "someRandomID1",
+//       startTime: "7:15",
+//       bookedSlots: "5",
+//       bookedTimes: ["7:15", "7:30", "7:45", "8:00", "8:15", "8:30"],
+//       name: "Mihai",
+//       email: "someemail@com",
+//       phone: "1123412341",
+//       cardConfirmed: false,
+//       message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
+//       pax: 4,
+//       assignedSlot: {
+//         Bar: {
+//           T10: {
+//             startTime: "7:15",
+//             bookedSlots: "5",
+//             bookedTimes: ["7:15", "7:30", "7:45", "8:00", "8:15", "8:30"]
+//           }
+//         }
+//       }
+//     },
+//     {
+//       id: "someRandomID2",
+//       startTime: "9:15",
+//       bookedSlots: "5",
+//       bookedTimes: ["9:15", "9:30", "9:45", "10:00", "10:15", "10:30"],
+//       name: "Mihai",
+//       email: "someemail@com",
+//       phone: "1123412341",
+//       cardConfirmed: false,
+//       message: "",
+//       pax: 3,
+//       assignedSlot: {
+//         Bar: {
+//           T10: {
+//             startTime: "9:15",
+//             bookedSlots: "5",
+//             bookedTimes: ["9:15", "9:30", "9:45", "10:00", "10:15", "10:30"]
+//           }
+//         }
+//       },
 //     }
 //   ]
 // }

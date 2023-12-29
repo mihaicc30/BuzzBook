@@ -1,9 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'YolissaDemo';
+  src: url('./assets/Yolissa Demo.otf') format('opentype');
+}
+
+.ff{ font-family: 'YolissaDemo', sans-serif;}
+
 *{
   box-sizing: border-box;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
 }

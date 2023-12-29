@@ -8,7 +8,7 @@ import { TableData } from "../comp/TableData"
 import { useCollectionData } from "react-firebase-hooks/firestore"
 
 export default function Dashboard() {
-  const { venueID, date, updateContext } = useContext(AppContext)
+  const { venueID, date, updateContext, contextBookings, contextCovers } = useContext(AppContext)
   //   venueNdate: `testVenueID ${new Date().toLocaleDateString("en-GB")}`
 
   const {
@@ -29,6 +29,17 @@ export default function Dashboard() {
 
   const [values] = useCollectionData(query(collection(db, "bookings"), where("venueNdate", "==", `${venueID} ${date}`)))
 
+  useEffect(() => {
+    if (!values) return
+    const bookings = values ? values[0]?.bookings || [] : []
+    if (bookings) {
+      if (contextBookings !== bookings.length) updateContext({ contextBookings: bookings.length })
+      if (contextCovers !== bookings.length) updateContext({ contextCovers: bookings.reduce((sum, booking) => sum + (booking.pax || 0), 0) })
+    }
+    // if adding updateContext in dependency it will provoke an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextBookings, contextCovers, values])
+
   if (isPending || error) return
 
   const sections = Object.keys(venueData.layout)
@@ -37,11 +48,10 @@ export default function Dashboard() {
 
   const numCols = hours.length * (sections.length + 1)
   const colWidth = 70
-  const totalGridWidth = numCols * colWidth * 2 + colWidth
+  const totalGridWidth = numCols * colWidth + colWidth
 
   return (
     <>
-      <Datepicker />
       {venueData && (
         <div className="overflow-auto">
           <div className="grid grid-cols-1" style={{ width: `${totalGridWidth}px` }}>
@@ -51,8 +61,8 @@ export default function Dashboard() {
               .map((section, index) => {
                 return (
                   <Fragment key={index}>
-                    <div className="grid grid-flow-col auto-cols-[70px] h-8 items-center border-b-2 border-b-black/[2%] bg-gray-100 " style={{ width: `${totalGridWidth}px` }}>
-                      <span className="sectionName sticky left-0 z-1 whitespace-nowrap font-[600]">{section}</span>
+                    <div className="grid grid-flow-col auto-cols-[70px] h-8 items-center border-b-2 z-[1] border-b-black/[2%] bg-gray-100 " style={{ width: `${totalGridWidth}px` }}>
+                      <span className="sectionName sticky left-0 z-[4] whitespace-nowrap font-[600]">{section}</span>
                     </div>
                     <TableData venueData={values} hours={hours} section={section} tables={Object.keys(venueData.layout[section]).sort()} />
                   </Fragment>
@@ -86,13 +96,13 @@ const GetWorkingHours = ({ totalGridWidth, hours }) => {
         <Fragment key={crypto.randomUUID()}>
           <div className={`font-bold sticky top-0 w-[20px] whitespace-nowrap`}>
             {hour}
-            {showBorder(currentTime, `${hour}:00`, `${hour}:15`) && <span className="absolute bg-red-400/30 w-2 h-[100vh]"></span>}
+            {showBorder(currentTime, `${hour}:00`, `${hour}:15`) && <span className="absolute bg-red-400/30 w-1 h-[100vh] z-[2]"></span>}
             <span className="text-[10px] font-normal">:00</span>
           </div>
 
-          <div className="font-thin sticky top-0 w-[20px]">{showBorder(currentTime, `${hour}:15`, `${hour}:30`) && <span className="absolute bg-red-400/30 w-2 h-[100vh]"></span>}15</div>
-          <div className="font-thin sticky top-0 w-[20px]">{showBorder(currentTime, `${hour}:30`, `${hour}:45`) && <span className="absolute bg-red-400/30 w-2 h-[100vh]"></span>}30</div>
-          <div className="font-thin sticky top-0 w-[20px]">{showBorder(currentTime, `${hour}:45`, `${hour}:59`) && <span className="absolute bg-red-400/30 w-2 h-[100vh]"></span>}45</div>
+          <div className="font-thin sticky top-0 w-[20px]">{showBorder(currentTime, `${hour}:15`, `${hour}:30`) && <span className="absolute bg-red-400/30 w-1 h-[100vh] z-[2]"></span>}15</div>
+          <div className="font-thin sticky top-0 w-[20px]">{showBorder(currentTime, `${hour}:30`, `${hour}:45`) && <span className="absolute bg-red-400/30 w-1 h-[100vh] z-[2]"></span>}30</div>
+          <div className="font-thin sticky top-0 w-[20px]">{showBorder(currentTime, `${hour}:45`, `${hour}:59`) && <span className="absolute bg-red-400/30 w-1 h-[100vh] z-[2]"></span>}45</div>
         </Fragment>
       ))}
     </div>

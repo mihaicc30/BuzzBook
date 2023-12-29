@@ -6,6 +6,7 @@ import { auth } from "../firebaseConfig"
 import Auth from "../pages/Auth"
 import Dashboard from "../pages/Dashboard"
 import Navbar from "./Navbar"
+import Account from "../pages/Account"
 
 const Paths = () => {
   const [user, loading, error] = useAuthState(auth)
@@ -25,6 +26,7 @@ const Paths = () => {
       >
         <Route path="/" element={<Auth />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/account" element={<Account />} />
         {/* <Route
           path="/activity"
           element={<RiderActivity />}
