@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext, useState } from "react"
 import { Outlet, Route, Routes, useLocation } from "react-router-dom"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../firebaseConfig"
@@ -7,8 +7,12 @@ import Auth from "../pages/Auth"
 import Dashboard from "../pages/Dashboard"
 import Navbar from "./Navbar"
 import Account from "../pages/Account"
+import TableDataModal from "./TableDataModal"
+import { AppContext } from "../App"
+import ModalUpdateDetails from "./ModalUpdateDetails"
 
 const Paths = () => {
+  const { venueLayout, venueID, date, updateContext, contextBookings, contextCovers, modalData, modalUpdateDetails } = useContext(AppContext)
   const [user, loading, error] = useAuthState(auth)
   const loc = useLocation()
   return (
@@ -17,6 +21,8 @@ const Paths = () => {
         path="/"
         element={
           <div className={`h-[100svh] flex flex-col overflow-hidden`}>
+            {modalData && <TableDataModal data={modalData} />}
+            {modalUpdateDetails && <ModalUpdateDetails />}
             <Navbar />
             <div className={`relative flex flex-col ${loc.pathname === "/" ? "basis-[100%]" : "basis-[95%]"} overflow-hidden`}>
               <Outlet />

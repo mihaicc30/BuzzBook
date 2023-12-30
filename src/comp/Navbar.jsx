@@ -45,6 +45,7 @@ function SideMenu({ cln }) {
   const { pathname } = useLocation()
   const [modal, setModal] = useState(false)
   const mainModalRef = useRef(null)
+  const secModalRef = useRef(null)
 
   const handleLogout = async () => {
     const success = await signOut()
@@ -63,29 +64,27 @@ function SideMenu({ cln }) {
           onClick={(e) => {
             if (pathname !== "/" && String(e.target.className)?.startsWith("mainModal") && !String(mainModalRef.current.className).includes("fadeOUT")) {
               mainModalRef.current.className = String(mainModalRef.current.className).replace("fadeIN", "fadeOUT")
-              setTimeout(() => {
-                setModal(!modal)
-              }, 500)
+              setModal(!modal)
             }
           }}
           className={`mainModal absolute inset-0 flex flex-col bg-gray-800/50 z-[19] animate-fadeIN  transition overflow-hidden`}
         >
-          <div className={`secModal overflow-y-auto absolute top-0 bot-0 right-0 flex flex-col bg-gray-50 z-20 h-[100svh] ${modal ? "w-[250px]" : "w-[0px]"} transition`} style={{ clipPath: "polygon(0 0, 100% 0%, 100% 100%, 0 100%, 8% 77%)" }}>
-            <div className="flex flex-col justify-center items-center mt-[8px] pb-12 border-b-2">
+          <div ref={secModalRef} className={`secModal overflow-y-auto absolute top-0 bot-0 right-0 flex flex-col bg-gray-50 z-20 h-[100svh] transition animate-fadeIN`} style={{ width: `250px`, clipPath: "polygon(0 0, 100% 0%, 100% 100%, 0 100%, 8% 77%)" }}>
+            
+            <div className="flex flex-col justify-center items-center mt-[8px] pb-6 border-b-2">
+            <img src="./assets/ic.png" alt="Logo" className="h-auto w-[60px]" />
               <h1 className="text-center text-[1.8rem] tracking-widest leading-[18px] text-[#181831] ff">Buzz</h1>
               <h1 className="text-center text-[1rem] tracking-widest leading-[18px] text-[#B74216]">
                 <span>-</span>
                 <span className="ff">BOOK</span>
                 <span>-</span>
               </h1>
+              <button className="p-2 m-2 border-2 rounded-lg active:scale-[0.9] transition" onClick={toggleFullScreen}>Toggle FullScreen</button>
             </div>
 
             <NavLink
               onClick={(e) => {
-                mainModalRef.current.className = String(mainModalRef.current.className).replace("fadeIN", "fadeOUT")
-                setTimeout(() => {
-                  setModal(!modal)
-                }, 500)
+                setModal(!modal)
               }}
               to="/dashboard"
               className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}
@@ -96,10 +95,7 @@ function SideMenu({ cln }) {
 
             <NavLink
               onClick={(e) => {
-                mainModalRef.current.className = String(mainModalRef.current.className).replace("fadeIN", "fadeOUT")
-                setTimeout(() => {
-                  setModal(!modal)
-                }, 500)
+                setModal(!modal)
               }}
               to="/account"
               className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}
@@ -108,7 +104,6 @@ function SideMenu({ cln }) {
               <span className=" border-b-2 border-b-blue-500 h-1 w-full"></span>
             </NavLink>
 
-            
             <NavLink
               onClick={async (e) => {
                 e.preventDefault()
@@ -125,4 +120,12 @@ function SideMenu({ cln }) {
       )}
     </>
   )
+}
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+  }
 }

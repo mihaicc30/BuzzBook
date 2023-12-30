@@ -14,7 +14,7 @@ export default function Dashboard() {
   const {
     isPending,
     error,
-    data: venueData
+    data: venueData,
   } = useSuspenseQuery({
     queryKey: ["venues", venueID],
     queryFn: async () => {
@@ -24,8 +24,9 @@ export default function Dashboard() {
       if (data.length > 0) {
         return data[0]
       } else return []
-    }
+    },
   })
+   
 
   const [values] = useCollectionData(query(collection(db, "bookings"), where("venueNdate", "==", `${venueID} ${date}`)))
 
@@ -34,7 +35,7 @@ export default function Dashboard() {
     const bookings = values ? values[0]?.bookings || [] : []
     if (bookings) {
       if (contextBookings !== bookings.length) updateContext({ contextBookings: bookings.length })
-      if (contextCovers !== bookings.length) updateContext({ contextCovers: bookings.reduce((sum, booking) => sum + (booking.pax || 0), 0) })
+      if (contextCovers !== bookings.length) updateContext({ contextCovers: bookings.reduce((sum, booking) => sum + (parseInt(booking.pax) || 0), 0) })
     }
     // if adding updateContext in dependency it will provoke an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,8 +54,8 @@ export default function Dashboard() {
   return (
     <>
       {venueData && (
-        <div className="overflow-auto">
-          <div className="grid grid-cols-1" style={{ width: `${totalGridWidth}px` }}>
+        <div className="dashboardContent overflow-auto">
+          <div className="grid grid-cols-1 grid-rows-2" style={{ width: `${totalGridWidth}px` }}>
             <GetWorkingHours hours={hours} totalGridWidth={totalGridWidth} />
             {Object.keys(venueData.layout)
               .sort()

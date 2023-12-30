@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'YolissaDemo';
-  src: url('./assets/Yolissa Demo.otf') format('opentype');
+  font-family: "YolissaDemo";
+  src: url("./assets/Yolissa Demo.otf") format("opentype");
 }
 
-.ff{ font-family: 'YolissaDemo', sans-serif;}
+.ff {
+  font-family: "YolissaDemo", sans-serif;
+}
 
-*{
+* {
   box-sizing: border-box;
   user-select: none;
   -webkit-user-select: none;
@@ -27,4 +29,54 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   right: 0;
   top: 0;
   width: auto;
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  width: auto;
+}
+
+/* Custom styles for Webkit browsers (Chrome, Safari) */
+*::-webkit-scrollbar {
+  margin: 10px 0;
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #4a5568; /* Change the color as needed */
+  border-radius: 50px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: #cbd5e0; /* Change the color as needed */
+  margin: 10px;
+  border-radius: 50px;
+}
+
+/* Custom styles for non-Webkit browsers */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #cbd5e0; /* Change the colors as needed */
+}
+
+*:hover {
+  scrollbar-color: #2d3748 #a0aec0; /* Change the colors on hover as needed */
+}
+
+
+.ani{
+  animation: fade-in forwards;
+  animation-timeline: view();
+  animation-range-start: contain 0px;
+  animation-range-end: cover 20svh;
+}
+
+@keyframes fade-in{
+  from {scale:.8; opacity: 0;}
+  to {scale:1; opacity: 1;}
 }
