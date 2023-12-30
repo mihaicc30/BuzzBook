@@ -41,9 +41,20 @@ export default function ModalUpdateDetails() {
     try {
       setLoading(true)
       let tempContext = modalUpdateDetails
-      console.log("TCL: handleChange -> tempContext", tempContext)
+      // bookedSlots
+      if (param === "bookedSlots") {
+        let tempSection = Object.keys(modalUpdateDetails[1].assignedSlot)[0]
 
-      if (param === "startTime") {
+        let tempTable = Object.keys(Object.values(modalUpdateDetails[1].assignedSlot)[0])[0]
+
+        let tempTimes = tempContext[1].assignedSlot[tempSection][tempTable]
+
+        tempTimes.bookedSlots = value
+        tempTimes.bookedTimes = generateTimeList(value, tempTimes.startTime)
+
+        tempContext[1].assignedSlot[tempSection][tempTable] = tempTimes
+        modalUpdateDetails[1].assignedSlot[tempSection][tempTable] = tempTimes
+      } else if (param === "startTime") {
         console.log("startTime", value)
         let tempSection = Object.keys(modalUpdateDetails[1].assignedSlot)[0]
 
@@ -56,7 +67,6 @@ export default function ModalUpdateDetails() {
 
         tempContext[1].assignedSlot[tempSection][tempTable] = tempTimes
         modalUpdateDetails[1].assignedSlot[tempSection][tempTable] = tempTimes
-
       } else if (param === "section") {
         let tempTimes = Object.values(Object.values(modalUpdateDetails[1].assignedSlot)[0])[0]
         let tempTableAvailableSelection = venueData.layout[value]
@@ -348,7 +358,7 @@ export default function ModalUpdateDetails() {
               </select>
             </div>
             <div className="flex flex-col gap-x-2 capitalize break-all">
-              <label className="border-b-2" htmlFor="">
+              <label className="border-b-2" htmlFor="modalTempStartTime">
                 Arrival
               </label>
 
@@ -358,6 +368,27 @@ export default function ModalUpdateDetails() {
                     {time}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-x-2 capitalize break-all">
+              <label className="border-b-2" htmlFor="modalTempbookedSlots">
+                Allocated time
+              </label>
+
+              <select id="modalTempbookedSlots" value={modalUpdateDetails[1].assignedSlot[Object.keys(modalUpdateDetails[1].assignedSlot)[0]][Object.keys(Object.values(modalUpdateDetails[1].assignedSlot)[0])[0]].bookedSlots} onChange={(e) => handleChange("bookedSlots", e.target.value)}>
+                <option value={1}>15min</option>
+                <option value={2}>30min</option>
+                <option value={3}>45min</option>
+                <option value={4}>1h</option>
+                <option value={5}>1h 15min</option>
+                <option value={6}>1h 30min</option>
+                <option value={7}>1h 45min</option>
+                <option value={8}>2h</option>
+                <option value={9}>2h 15min</option>
+                <option value={10}>2h 30min</option>
+                <option value={11}>2h 45min</option>
+                <option value={12}>3h</option>
               </select>
             </div>
           </div>
@@ -396,7 +427,7 @@ function generateTimeList(slots, startTime) {
   const timeList = []
   const [startHour, startMinute] = startTime.split(":").map(Number)
 
-  for (let i = 0; i < slots; i++) {
+  for (let i = 0; i < parseInt(slots) + 1; i++) {
     const hour = Math.floor((startMinute + i * 15) / 60) + startHour
     const minute = (startMinute + i * 15) % 60
 

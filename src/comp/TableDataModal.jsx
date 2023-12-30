@@ -25,7 +25,7 @@ export default function TableDataModal({ data }) {
   const mainModalRef = useRef(null)
 
   const handleUpdate = (whatToUpdate) => {
-    updateContext({modalUpdateDetails: [whatToUpdate, data]})
+    updateContext({ modalUpdateDetails: [whatToUpdate, data] })
     // switch (whatToUpdate) {
     //     case "userDetails":
     //         // name,phone,email,message
@@ -57,7 +57,7 @@ export default function TableDataModal({ data }) {
         }
       }}
       ref={mainModalRef}
-      className={`absolute flex justify-end items-center  bg-black/80 h-[100svh] w-[100svw] z-20 overflow-hidden transition ${fadeOut ? "animate-fadeOUT" : "animate-fadeIN"}`}
+      className={`absolute flex justify-end items-center  bg-black/60 h-[100svh]  w-[100svw] z-20 overflow-hidden transition ${fadeOut ? "animate-fadeOUT" : "animate-fadeIN"}`}
     >
       <div className={`relative flex flex-col h-[100svh] w-[50svw] max-sm:w-[80svw] min-w-[280px] z-30 bg-white overflow-y-auto overflow-x-hidden transition ${fadeOut ? "animate-fadeLeftToRight" : "animate-fadeRightToLeft"} `}>
         <div className="flex flex-nowrap gap-x-2 items-center justify-between overflow-x-hidden min-h-[46px]">
@@ -126,7 +126,7 @@ export default function TableDataModal({ data }) {
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
             <PiWatchLight />
-            {data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime}
+            {data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime} - {generateTimeList(data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].bookedSlots, data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime).at(-1)}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
             <MdOutlineDateRange />
@@ -158,7 +158,39 @@ export default function TableDataModal({ data }) {
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize tracking-wide text-xl">{data.message ? data.message : "-No message-"}</div>
         </div>
+
+        {data.status.status !== "Expected" && (
+          <>
+           <span className="h-[2px] w-[96%] min-h-[2px] mx-auto bg-black rounded-full my-8"></span>
+           <div className="grid grid-cols-1 px-4">
+             <div className="flex flex-nowarp items-center gap-x-2 capitalize font-[600] text-xl whitespace-nowrap">
+               <TiMessages />
+               {data.status.status}
+             </div>
+             <div className="flex flex-nowarp items-center gap-x-2 capitalize tracking-wide text-xl">{data.status.message ? data.status.message :'No reason provided.'}</div>
+           </div>
+          </>
+        )}
       </div>
     </div>
   )
+}
+
+// *******************//
+// utility functions  //
+// *******************//
+
+function generateTimeList(slots, startTime) {
+  const timeList = []
+  const [startHour, startMinute] = startTime.split(":").map(Number)
+
+  for (let i = 0; i < parseInt(slots) + 1; i++) {
+    const hour = Math.floor((startMinute + i * 15) / 60) + startHour
+    const minute = (startMinute + i * 15) % 60
+
+    const formattedTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
+    timeList.push(formattedTime)
+  }
+
+  return timeList
 }

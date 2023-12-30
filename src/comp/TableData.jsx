@@ -40,7 +40,7 @@ export const TableData = ({ venueData, tables, section, hours }) => {
 
                       if (bookedTimes.includes(time)) {
                         return (
-                          <div onClick={() => updateContext({ modalData: entry })} key={crypto.randomUUID()} className={`tableData cursor-pointer flex items-center h-[40px] w-full text-xs bg-blue-200 rounded z-[3]`} style={{ gridColumn: `span ${entry.bookedSlots} / span ${entry.bookedSlots}`, gridColumnStart: `${calculateGridColumnStart(time)}` }} title={`${section} ${tn} ${time}`}>
+                          <div onClick={() => updateContext({ modalData: entry })} key={crypto.randomUUID()} className={`tableData cursor-pointer flex items-center h-[40px] w-full text-xs ${entry.status.status === "Expected" ? 'bg-blue-200' : 'bg-red-400 opacity-[0.2]'} rounded z-[3]`} style={{ gridColumn: `span ${entry.assignedSlot[Object.keys(entry.assignedSlot)[0]][Object.keys(Object.values(entry.assignedSlot)[0])[0]].bookedSlots} / span ${entry.assignedSlot[Object.keys(entry.assignedSlot)[0]][Object.keys(Object.values(entry.assignedSlot)[0])[0]].bookedSlots}`, gridColumnStart: `${calculateGridColumnStart(time)}` }} title={`${section} ${tn} ${time}`}>
                             <div className="flex flex-nowrap justify-between items-center w-full">
                               <div className={`flex flex-nowrap items-center gap-x-2  h-full`}>
                                 <div className="flex items-baseline h-full">
