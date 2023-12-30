@@ -55,7 +55,7 @@ export default function Dashboard() {
     <>
       {venueData && (
         <div className="dashboardContent overflow-auto">
-          <div className="grid grid-cols-1 grid-rows-2" style={{ width: `${totalGridWidth}px` }}>
+          <div className="grid grid-cols-1 auto-rows-max" style={{ width: `${totalGridWidth}px` }}>
             <GetWorkingHours hours={hours} totalGridWidth={totalGridWidth} />
             {Object.keys(venueData.layout)
               .sort()

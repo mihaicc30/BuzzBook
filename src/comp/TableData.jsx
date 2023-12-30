@@ -25,7 +25,7 @@ export const TableData = ({ venueData, tables, section, hours }) => {
       {tables.map((tn, indx) => (
         <Fragment key={crypto.randomUUID()}>
           <div className={`grid grid-flow-col auto-cols-[70px] items-center border-b-2 border-b-black/[2%] z-[1] ${indx % 2 == 0 ? "bg-white" : "bg-gray-50"} `}>
-            <span className={`row-span-2 tableName   sticky flex items-center left-0 z-[4] whitespace-nowrap h-full`}>
+            <span className={`row-span-5 tableName   sticky flex items-center left-0 z-[4] whitespace-nowrap h-full`}>
               <span className={`pl-2 h-full flex items-center ${indx % 2 == 0 ? "bg-white" : "bg-gray-50"}`}>{tn}</span>
             </span>
 
