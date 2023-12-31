@@ -1,30 +1,30 @@
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { collection, getDocs, query, where } from "firebase/firestore"
-import { Fragment, Suspense, useContext, useEffect, useState } from "react"
-import { db } from "../firebaseConfig"
-import { AppContext } from "../App"
-import { MdEmail } from "react-icons/md"
-import { FaRegCreditCard } from "react-icons/fa6"
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { Fragment, Suspense, useContext, useEffect, useState } from "react";
+import { db } from "../firebaseConfig";
+import { AppContext } from "../App";
+import { MdEmail } from "react-icons/md";
+import { FaRegCreditCard } from "react-icons/fa6";
 
-export const TableData = ({ venueData, tables, section, hours }) => {
-  const { updateContext } = useContext(AppContext)
-  const [assignedSlots, setAssignedSlots] = useState(false)
+export const GridData = ({ venueData, tables, section, hours }) => {
+  const { updateContext } = useContext(AppContext);
+  const [assignedSlots, setAssignedSlots] = useState(false);
 
   useEffect(() => {
     if (venueData && venueData.length > 0) {
-      setAssignedSlots(venueData[0].bookings)
+      setAssignedSlots(venueData[0].bookings);
     } else {
-      setAssignedSlots([])
+      setAssignedSlots([]);
     }
-  }, [venueData])
+  }, [venueData]);
 
-  if (!venueData || !assignedSlots) return
+  if (!venueData || !assignedSlots) return;
 
   return (
     <Suspense fallback={"Loading"}>
       {tables.map((tn, indx) => (
         <Fragment key={crypto.randomUUID()}>
-          <div className={`grid grid-flow-col auto-cols-[70px] items-center border-b-2 border-b-black/[2%] z-[1] ${indx % 2 == 0 ? "bg-white" : "bg-gray-50"} `}>
+          <div className={`sectionContainer grid grid-flow-col auto-cols-[40px] items-center border-b-2 border-b-black/[2%] z-[1] ${indx % 2 == 0 ? "bg-white" : "bg-gray-50"} `}>
             <span className={`row-span-5 tableName   sticky flex items-center left-0 z-[4] whitespace-nowrap h-full`}>
               <span className={`pl-2 h-full flex items-center ${indx % 2 == 0 ? "bg-white" : "bg-gray-50"}`}>{tn}</span>
             </span>
@@ -32,15 +32,15 @@ export const TableData = ({ venueData, tables, section, hours }) => {
             {hours.map((hour, index) => (
               <Fragment key={crypto.randomUUID()}>
                 {assignedSlots.map((entry) => {
-                  const bookedTimes = entry.assignedSlot?.[section]?.[tn]?.startTime
+                  const bookedTimes = entry.assignedSlot?.[section]?.[tn]?.startTime;
 
                   if (bookedTimes && [`${hour}:00`, `${hour}:15`, `${hour}:30`, `${hour}:45`].includes(bookedTimes)) {
                     const generateSpan = (minute) => {
-                      const time = `${hour}:${minute}`
+                      const time = `${hour}:${minute}`;
 
                       if (bookedTimes.includes(time)) {
                         return (
-                          <div onClick={() => updateContext({ modalData: entry })} key={crypto.randomUUID()} className={`tableData cursor-pointer flex items-center h-[40px] w-full text-xs ${entry.status.status === "Expected" ? 'bg-blue-200' : 'bg-red-400 opacity-[0.2]'} rounded z-[3]`} style={{ gridColumn: `span ${entry.assignedSlot[Object.keys(entry.assignedSlot)[0]][Object.keys(Object.values(entry.assignedSlot)[0])[0]].bookedSlots} / span ${entry.assignedSlot[Object.keys(entry.assignedSlot)[0]][Object.keys(Object.values(entry.assignedSlot)[0])[0]].bookedSlots}`, gridColumnStart: `${calculateGridColumnStart(time)}` }} title={`${section} ${tn} ${time}`}>
+                          <div onClick={() => updateContext({ modalData: entry })} key={crypto.randomUUID()} className={`tableData cursor-pointer flex items-center h-[40px] w-full text-xs ${entry.status.status === "Expected" ? "bg-blue-200" : "bg-red-400 opacity-[0.2]"} rounded z-[3]`} style={{ gridColumn: `span ${entry.assignedSlot[Object.keys(entry.assignedSlot)[0]][Object.keys(Object.values(entry.assignedSlot)[0])[0]].bookedSlots} / span ${entry.assignedSlot[Object.keys(entry.assignedSlot)[0]][Object.keys(Object.values(entry.assignedSlot)[0])[0]].bookedSlots}`, gridColumnStart: `${calculateGridColumnStart(time)}` }} title={`${section} ${tn} ${time}`}>
                             <div className="flex flex-nowrap justify-between items-center w-full">
                               <div className={`flex flex-nowrap items-center gap-x-2  h-full`}>
                                 <div className="flex items-baseline h-full">
@@ -55,22 +55,22 @@ export const TableData = ({ venueData, tables, section, hours }) => {
                                   <FaRegCreditCard className={`fill-green-600`} />
                                 </div>
                                 <div className={`${entry.message ? "" : "opacity-[0.1]"} text-lg`} title={`Message: ${entry.message ? entry.message : "-"}`}>
-                                  <MdEmail className={`fill-orange-600`}/>
+                                  <MdEmail className={`fill-orange-600`} />
                                 </div>
                               </div>
                             </div>
                           </div>
-                        )
-                      } 
-                    }
+                        );
+                      }
+                    };
 
-                    return <Fragment key={crypto.randomUUID()}>{["00", "15", "30", "45"].map((minute) => generateSpan(minute))}</Fragment>
+                    return <Fragment key={crypto.randomUUID()}>{["00", "15", "30", "45"].map((minute) => generateSpan(minute))}</Fragment>;
                   }
                   //  else {
                   //   return <span key={crypto.randomUUID()}></span>
                   // }
 
-                  return null // If no bookedTimes match
+                  return null; // If no bookedTimes match
                 })}
               </Fragment>
             ))}
@@ -78,8 +78,12 @@ export const TableData = ({ venueData, tables, section, hours }) => {
         </Fragment>
       ))}
     </Suspense>
-  )
-}
+  );
+};
+
+// *******************//
+// utility functions  //
+// *******************//
 
 function calculateGridColumnStart(time) {
   const [hours, minutes] = time.split(":").map(Number);
