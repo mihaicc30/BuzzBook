@@ -11,8 +11,7 @@ import { UnseatedData } from "../comp/UnseatedData";
 
 export default function Dashboard() {
   const { venueID, date, venueLayout, updateContext, contextBookings, contextCovers, unassignedBookings } = useContext(AppContext);
-  const [viewState, setViewState] = useState("unseated");
-  //   venueNdate: `testVenueID ${new Date().toLocaleDateString("en-GB")}`
+  const [viewState, setViewState] = useState("grid");
 
   const {
     isPending,
@@ -180,10 +179,10 @@ const GetWorkingHoursAndCovers = ({ totalGridWidth, hours }) => {
 // *******************//
 
 const calculateCovers = (hour, minute, bookings) => {
-  const sum = bookings.reduce((sum, booking) => {
+  const sum = bookings.filter((bookz)=>bookz.assignedSlot).reduce((sum, booking) => {
     const timeFrame = `${String(hour).padStart(2, "0")}:${minute}`;
     const assignedSlot = booking.assignedSlot;
-    if (!assignedSlot) return 0;
+    if (!assignedSlot) return sum || 0;
     const slotKeys = Object.keys(assignedSlot);
 
     const BT = assignedSlot[slotKeys[0]][Object.keys(assignedSlot[slotKeys[0]])[0]]?.bookedTimes || [];

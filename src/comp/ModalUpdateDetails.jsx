@@ -43,7 +43,6 @@ export default function ModalUpdateDetails() {
       let tempContext = modalUpdateDetails;
       // bookedSlots
       if (param === "bookedSlots") {
-        console.log("here1");
         let tempSection = Object.keys(modalUpdateDetails[1].assignedSlot)[0];
 
         let tempTable = Object.keys(Object.values(modalUpdateDetails[1].assignedSlot)[0])[0];
@@ -56,8 +55,6 @@ export default function ModalUpdateDetails() {
         tempContext[1].assignedSlot[tempSection][tempTable] = tempTimes;
         modalUpdateDetails[1].assignedSlot[tempSection][tempTable] = tempTimes;
       } else if (param === "startTime") {
-        console.log("startTime", value);
-        console.log("here2");
         let tempSection = Object.keys(modalUpdateDetails[1].assignedSlot)[0];
 
         let tempTable = Object.keys(Object.values(modalUpdateDetails[1].assignedSlot)[0])[0];
@@ -70,10 +67,7 @@ export default function ModalUpdateDetails() {
         tempContext[1].assignedSlot[tempSection][tempTable] = tempTimes;
         modalUpdateDetails[1].assignedSlot[tempSection][tempTable] = tempTimes;
       } else if (param === "section") {
-        console.log("here7");
         if (modalUpdateDetails[0] === "unassignedSlot") {
-          console.log(">>>", modalUpdateDetails[0], param, value);
-          console.log(">XXXXXX>", venueLayout[value], Object.values(Object.keys(venueLayout[value]))[0]);
           let tempAssignedSlot = {
             [value]: {
               [Object.values(Object.keys(venueLayout[value]))[0]]: {
@@ -136,7 +130,6 @@ export default function ModalUpdateDetails() {
           ];
         }
       } else if (param === "table") {
-        console.log("here6");
         let tempTimes = Object.values(Object.values(modalUpdateDetails[1].assignedSlot)[0])[0];
         let tempSection = Object.keys(modalUpdateDetails[1].assignedSlot)[0];
         let tableChangedTo = {
@@ -165,7 +158,6 @@ export default function ModalUpdateDetails() {
           },
         ];
       } else if (param === "status") {
-        console.log("here5");
         updateContext({
           modalUpdateDetails: [
             modalUpdateDetails[0],
@@ -189,7 +181,6 @@ export default function ModalUpdateDetails() {
           },
         ];
       } else if (param === "messageDelete") {
-        console.log("here4");
         updateContext({
           modalUpdateDetails: [
             modalUpdateDetails[0],
@@ -207,7 +198,6 @@ export default function ModalUpdateDetails() {
           },
         ];
       } else {
-        console.log("here3");
         updateContext({
           modalUpdateDetails: [
             modalUpdateDetails[0],
@@ -256,7 +246,7 @@ export default function ModalUpdateDetails() {
     } catch (error) {
       clearTimeout(waitTimer.current);
       setLoading(false);
-      // alert(error.message);
+      alert(error.message);
       console.log(error.message);
     }
   };

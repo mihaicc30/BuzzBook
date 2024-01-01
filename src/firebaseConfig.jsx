@@ -61,110 +61,102 @@ const logOut = () => {
   signOut(auth);
 };
 
-const addSomeData = () => {
-  let x = {
-    venueNdate: `testVenueID ${new Date().toLocaleDateString("en-GB")}`,
-    bookings: [
-      {
-        status: {
-          status: "Expected",
-          reason: "",
-        },
-        id: crypto.randomUUID(),
-        made: "By Phone",
-        startTime: "7:15",
-        date: new Date().toLocaleDateString("en-GB"),
-        bookedSlots: "5",
-        bookedTimes: ["7:15", "7:30", "7:45", "8:00", "8:15", "8:30"],
-        name: "Jim Raynor",
-        email: "someemail@com",
-        phone: "1123412341",
-        desiredStartTime: "7:15",
-        cardConfirmed: false,
-        message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
-        pax: 4,
-      },
-      {
-        status: {
-          status: "Expected",
-          reason: "",
-        },
-        id: crypto.randomUUID(),
-        startTime: "9:15",
-        made: "By Phone",
-        date: new Date().toLocaleDateString("en-GB"),
-        name: "Aiur Talandar",
-        email: "someemail@com",
-        phone: "1123412341",
-        cardConfirmed: false,
-        message: "",
-        pax: 3,
-        desiredStartTime: "9:15",
-        assignedSlot: {
-          Restaurant: {
-            T1: {
-              startTime: "9:15",
-              bookedSlots: "5",
-              bookedTimes: ["9:15", "9:30", "9:45", "10:00", "10:15", "10:30"],
-            },
-          },
+const addSomeData = () => [
+  {
+    startTime: "7:15",
+    message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
+    made: "By Phone",
+    cardConfirmed: false,
+    id: crypto.randomUUID(),
+    desiredStartTime: "7:15",
+    status: {
+      status: "Expected",
+      reason: "",
+    },
+    date: "01/01/2024",
+    name: "Jim Raynor",
+    phone: "1123412341",
+    pax: 4,
+    email: "someemail@com",
+  },
+  {
+    name: "Aiur Talandar",
+    desiredStartTime: "9:15",
+    startTime: "9:15",
+    pax: 3,
+    phone: "1123412341",
+    made: "By Phone",
+    message: "",
+    cardConfirmed: true,
+    id: crypto.randomUUID(),
+    status: {
+      status: "Expected",
+      reason: "",
+    },
+    email: "someemail@com",
+    assignedSlot: {
+      Restaurant: {
+        T1: {
+          startTime: "8:15",
+          bookedTimes: ["08:15", "08:30", "08:45", "09:00", "09:15"],
+          bookedSlots: "5",
         },
       },
-      {
-        status: {
-          status: "Expected",
-          reason: "",
-        },
-        id: crypto.randomUUID(),
-        startTime: "7:15",
-        made: "By Phone",
-        date: new Date().toLocaleDateString("en-GB"),
-        name: "Artanis Ashredar",
-        email: "someemail@com",
-        phone: "1123412341",
-        cardConfirmed: false,
-        message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
-        pax: 4,
-        desiredStartTime: "7:15",
-        assignedSlot: {
-          Bar: {
-            T10: {
-              startTime: "7:15",
-              bookedSlots: "5",
-              bookedTimes: ["7:15", "7:30", "7:45", "8:00", "8:15", "8:30"],
-            },
-          },
+    },
+    date: "01/01/2024",
+  },
+  {
+    date: "01/01/2024",
+    startTime: "7:15",
+    desiredStartTime: "7:15",
+    assignedSlot: {
+      Bar: {
+        T10: {
+          bookedTimes: ["07:00", "07:15", "07:30", "07:45", "08:00"],
+          bookedSlots: "5",
+          startTime: "7:00",
         },
       },
-      {
-        status: {
-          status: "Expected",
-          reason: "",
-        },
-        id: crypto.randomUUID(),
-        made: "Online",
-        date: new Date().toLocaleDateString("en-GB"),
-        name: "High Executor Selendis",
-        email: "someemail@com",
-        phone: "1123412341",
-        cardConfirmed: true,
-        message: "Some short message",
-        pax: 3,
-        desiredStartTime: "9:15",
-        assignedSlot: {
-          Bar: {
-            T10: {
-              startTime: "9:15",
-              bookedSlots: "5",
-              bookedTimes: ["9:15", "9:30", "9:45", "10:00", "10:15", "10:30"],
-            },
-          },
+    },
+    email: "someemail@com",
+    cardConfirmed: false,
+    name: "Artanis Ashredar",
+    status: {
+      status: "Expected",
+      reason: "",
+    },
+    made: "By Phone",
+    pax: 4,
+    message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
+    phone: "1123412341",
+    id: crypto.randomUUID(),
+  },
+  {
+    assignedSlot: {
+      Bar: {
+        T10: {
+          startTime: "9:00",
+          bookedSlots: "5",
+          bookedTimes: ["09:00", "09:15", "09:30", "09:45", "10:00"],
         },
       },
-    ],
-  };
-  addDoc(collection(db, "bookings"), x);
-};
+    },
+    made: "Online",
+    date: "01/01/2024",
+    name: "High Executor Selendis",
+    pax: 3,
+    message: "Some short message",
+    status: {
+      reason: "",
+      status: "Expected",
+    },
+    phone: "1123412341",
+    id: crypto.randomUUID(),
+    desiredStartTime: "9:15",
+    cardConfirmed: true,
+    email: "someemail@com",
+  },
+];
 
 // addSomeData()
 export { db, app, auth, signInWithGoogle, logOut, logInWithEmailAndPassword };
