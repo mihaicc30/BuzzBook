@@ -20,7 +20,7 @@ export default function Dashboard() {
   } = useSuspenseQuery({
     queryKey: ["venues", venueID],
     queryFn: async () => {
-      const venueData = await query(collection(db, "venues"), where("venue", "==", venueID));
+      const venueData = await query(collection(db, "venues"), where("id", "==", venueID));
       const result = await getDocs(venueData);
       const data = result.docs.map((element) => element.data());
       if (data.length > 0) {
@@ -53,8 +53,8 @@ export default function Dashboard() {
   }, [contextBookings, contextCovers, values]);
 
   if (isPending || error) return;
-
-  const sections = Object.keys(venueData.layout);
+  
+  const sections = Object.keys(venueData?.layout || venueLayout);
   // temp code _ operational hours 7:00 -> 23:45
   const hours = Array.from({ length: 17 }, (_, i) => 7 + i);
 
@@ -65,6 +65,12 @@ export default function Dashboard() {
   return (
     <>
       <div className={`flex gap-x-2 justify-between`}>
+        {/*  */}
+        {/* <div className="absolute top-0 left-0 h-[50vh] w-[50vw] bg-gray-200 z-[200] flex flex-col">
+          <iframe sandbox="allow-same-origin allow-scripts" src="http://localhost:5173/create-booking" className="flex-1 bg-white"></iframe>
+        </div> */}
+        {/*  */}
+
         <div>
           <button onClick={() => setViewState("grid")} className={`px-4 text-sm tracking-wide transition ${viewState === "grid" ? "font-[700] border-b-2 border-b-blue-400" : ""}`}>
             Grid
@@ -76,7 +82,9 @@ export default function Dashboard() {
             Unseated ({unassignedBookings})
           </button>
         </div>
-        <button className={`px-4 text-sm tracking-wide font-[700] border-b-2 border-b-orange-400`}>+Booking</button>
+        <a href={`/create-booking/${venueData.venue}/${venueData.id}`} className={`px-4 text-sm tracking-wide font-[700] border-b-2 border-b-orange-400`}>
+          +Booking
+        </a>
       </div>
       {viewState === "unseated" && venueData && (
         <>
@@ -99,7 +107,7 @@ export default function Dashboard() {
         <div className="dashboardContent overflow-auto h-full w-full">
           <div className="grid grid-cols-1 auto-rows-max" style={{ width: `${totalGridWidth}px` }}>
             <GetWorkingHoursAndCovers hours={hours} totalGridWidth={totalGridWidth} />
-            {Object.keys(venueData.layout)
+            {Object.keys(venueData?.layout || venueLayout)
               .sort()
               .map((section, index) => {
                 return (
@@ -107,7 +115,7 @@ export default function Dashboard() {
                     <div className="grid grid-flow-col auto-cols-[40px] h-8 items-center border-b-2 z-[1] border-b-black/[2%] bg-gray-100 " style={{ width: `${totalGridWidth}px` }}>
                       <span className="sectionName sticky left-0 z-[4] whitespace-nowrap font-[600]">{section}</span>
                     </div>
-                    <GridData venueData={values} hours={hours} section={section} tables={Object.keys(venueData.layout[section]).sort()} />
+                    <GridData venueData={values} hours={hours} section={section} tables={Object.keys(venueData?.layout[section] || venueLayout[section]).sort()} />
                   </Fragment>
                 );
               })}
@@ -179,21 +187,23 @@ const GetWorkingHoursAndCovers = ({ totalGridWidth, hours }) => {
 // *******************//
 
 const calculateCovers = (hour, minute, bookings) => {
-  const sum = bookings.filter((bookz)=>bookz.assignedSlot).reduce((sum, booking) => {
-    const timeFrame = `${String(hour).padStart(2, "0")}:${minute}`;
-    const assignedSlot = booking.assignedSlot;
-    if (!assignedSlot) return sum || 0;
-    const slotKeys = Object.keys(assignedSlot);
+  const sum = bookings
+    .filter((bookz) => bookz.assignedSlot)
+    .reduce((sum, booking) => {
+      const timeFrame = `${String(hour).padStart(2, "0")}:${minute}`;
+      const assignedSlot = booking.assignedSlot;
+      if (!assignedSlot) return sum || 0;
+      const slotKeys = Object.keys(assignedSlot);
 
-    const BT = assignedSlot[slotKeys[0]][Object.keys(assignedSlot[slotKeys[0]])[0]]?.bookedTimes || [];
-    const status = booking.status?.status === "Expected";
+      const BT = assignedSlot[slotKeys[0]][Object.keys(assignedSlot[slotKeys[0]])[0]]?.bookedTimes || [];
+      const status = booking.status?.status === "Expected";
 
-    if (BT && BT.includes(String(timeFrame)) && status) {
-      sum += parseInt(booking.pax, 10);
-    }
+      if (BT && BT.includes(String(timeFrame)) && status) {
+        sum += parseInt(booking.pax, 10);
+      }
 
-    return sum;
-  }, 0);
+      return sum;
+    }, 0);
 
   return sum;
 };

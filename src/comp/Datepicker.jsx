@@ -4,7 +4,7 @@ import { AppContext } from "../App";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 export default function Datepicker() {
-  const { date, updateContext, contextBookings, contextCovers } = useContext(AppContext);
+  const { date, updateContext, unassignedBookings,contextBookings, contextCovers } = useContext(AppContext);
   const [dateValue, setDateValue] = useState(new Date().toISOString().split("T")[0]);
 
   useEffect(() => {
@@ -26,14 +26,14 @@ export default function Datepicker() {
           <FaAngleLeft />
         </div>
         <div className="relative">
-          <input type="date" className={`px-2 border-2 rounded-lg text-center w-full border-y-orange-400/50`} value={dateValue} onChange={(e) => setDateValue(e.target.value)} />
+          <input type="date" className={`px-2 border-[1px] rounded-lg text-center w-full border-y-orange-600`} value={dateValue} onChange={(e) => setDateValue(e.target.value)} />
         </div>
         <div className="p-2 text-xl active:scale-[.5] focus:scale-[.5] transition cursor-pointer" onClick={() => handleDateChange(1)}>
           <FaAngleRight />
         </div>
       </div>
-      <div className="flex flex-nowrap justify-center gap-x-2 text-sm">
-        <span>Bookings {contextBookings || 0}</span> - <span>Covers: {contextCovers || 0}</span>
+      <div className="flex flex-wrap justify-center gap-x-2 text-sm">
+        <span>Bookings {contextBookings || 0}{unassignedBookings > 0 && `/${unassignedBookings + contextBookings}`}</span> - <span>Covers: {contextCovers || 0}</span>
       </div>
     </div>
   );

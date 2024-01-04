@@ -11,10 +11,10 @@ export default function Navbar() {
 
   return (
     <>
-      {pathname !== "/" && (
+      {pathname !== "/" && !pathname.startsWith("/create-booking") && (
         <div className="flex basis-[5%] justify-between px-2 border-b-2 max-[460px]:flex-col">
           <div className="h-full flex justify-center items-center my-auto">
-            <img src="./assets/ic.png" alt="Logo" className="h-auto w-[60px]" />
+            <img src={`${pathname.startsWith("/create-booking") ? "../../assets/ic.png" : "./assets/ic.png"}` } alt="Logo" className="h-auto w-[60px]" />
             <div className="flex flex-col justify-center items-center h-full mt-[8px]">
               <h1 className="text-center text-[1.8rem] tracking-widest leading-[18px] text-[#181831] ff">Buzz</h1>
               <h1 className="text-center text-[1rem] tracking-widest leading-[18px] text-[#B74216]">

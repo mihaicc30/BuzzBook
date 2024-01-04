@@ -1,14 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/assets/ic-vHcRkazl.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BuzzBook</title>
-    <script type="module" crossorigin src="/assets/index-JvR4mfTp.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-_t9TODxA.css">
+    <script type="module" crossorigin src="/assets/index-ZmM_q-jF.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-gcc8U-L1.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      
+      document.addEventListener("mousemove", (e) => {
+        let curs = document.querySelector(".cursor");
+        if(!curs) return
+        let x = e.pageX;
+        let y = e.pageY;
+        curs.style.left = x - 150 + "px";
+        curs.style.top = y - 150 + "px";
+        curs.style.opacity = "1";
+      });
+    </script>
   </body>
 </html>

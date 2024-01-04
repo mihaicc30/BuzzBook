@@ -19,7 +19,7 @@ export default function ModalUpdateDetails() {
   } = useSuspenseQuery({
     queryKey: ["venues", venueID],
     queryFn: async () => {
-      const venueData = await query(collection(db, "venues"), where("venue", "==", venueID));
+      const venueData = await query(collection(db, "venues"), where("id", "==", venueID));
       const result = await getDocs(venueData);
       const data = result.docs.map((element) => element.data());
       if (data.length > 0) {
@@ -361,7 +361,7 @@ export default function ModalUpdateDetails() {
                 Section
               </label>
               <select id="modalTempSection" defaultValue={null} onChange={(e) => handleChange("section", e.target.value)}>
-                {Object.keys(venueData.layout).length > 0 &&
+                {( Object.keys(venueData?.layout).length > 0 || Object.keys(venueLayout).length > 0) &&
                   Object.keys(venueData.layout)
                     .sort()
                     .map((section) => (
@@ -378,7 +378,7 @@ export default function ModalUpdateDetails() {
               </label>
               <select id="modalTempTable" defaultValue={null} onChange={(e) => handleChange("table", e.target.value)}>
                 {Object.keys(modalUpdateDetails[1].assignedSlot)[0] &&
-                  Object.keys(venueData.layout[Object.keys(modalUpdateDetails[1].assignedSlot)[0]])
+                  Object.keys(venueData?.layout[Object.keys(modalUpdateDetails[1].assignedSlot)[0]])
                     .sort()
                     .map((tableKey) => (
                       <option key={tableKey} value={tableKey}>

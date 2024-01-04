@@ -6,6 +6,7 @@ export default {
       animation: {
         fadeUP: "fadeUP 1s ease forwards",
         fadeIN: "fadeIN .4s ease forwards",
+        fadeINinfinite: "fadeIN 2s ease infinite",
         fadeOUT: "fadeOUT .4s ease forwards",
         fadeRightToLeft: "fadeRightToLeft .4s ease forwards",
         fadeLeftToRight: "fadeLeftToRight .4s ease forwards",

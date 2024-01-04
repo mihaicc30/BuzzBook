@@ -61,102 +61,135 @@ const logOut = () => {
   signOut(auth);
 };
 
-const addSomeData = () => [
-  {
-    startTime: "7:15",
-    message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
-    made: "By Phone",
-    cardConfirmed: false,
-    id: crypto.randomUUID(),
-    desiredStartTime: "7:15",
-    status: {
-      status: "Expected",
-      reason: "",
-    },
-    date: "01/01/2024",
-    name: "Jim Raynor",
-    phone: "1123412341",
-    pax: 4,
-    email: "someemail@com",
-  },
-  {
-    name: "Aiur Talandar",
-    desiredStartTime: "9:15",
-    startTime: "9:15",
-    pax: 3,
-    phone: "1123412341",
-    made: "By Phone",
-    message: "",
-    cardConfirmed: true,
-    id: crypto.randomUUID(),
-    status: {
-      status: "Expected",
-      reason: "",
-    },
-    email: "someemail@com",
-    assignedSlot: {
-      Restaurant: {
-        T1: {
-          startTime: "8:15",
-          bookedTimes: ["08:15", "08:30", "08:45", "09:00", "09:15"],
-          bookedSlots: "5",
+const addSomeData = () => {
+  let x = {
+    venueNdate: `testVenueID ${new Date().toLocaleDateString("en-GB")}`,
+    bookings: [
+      {
+        startTime: "7:15",
+        message: "Some message Some message Some message Some message Some message ! Hope you got it!",
+        made: "By Phone",
+        cardConfirmed: false,
+        id: crypto.randomUUID(),
+        desiredStartTime: "7:15",
+        status: {
+          status: "Expected",
+          reason: "",
         },
+        date: "02/01/2024",
+        name: "Daniel Jackson",
+        phone: "1123412341",
+        pax: 4,
+        email: "someemail@com",
       },
-    },
-    date: "01/01/2024",
-  },
-  {
-    date: "01/01/2024",
-    startTime: "7:15",
-    desiredStartTime: "7:15",
-    assignedSlot: {
-      Bar: {
-        T10: {
-          bookedTimes: ["07:00", "07:15", "07:30", "07:45", "08:00"],
-          bookedSlots: "5",
-          startTime: "7:00",
+      {
+        name: "Samantha Carter",
+        desiredStartTime: "9:15",
+        startTime: "9:15",
+        pax: 3,
+        phone: "1123412341",
+        made: "By Phone",
+        message: "",
+        cardConfirmed: true,
+        id: crypto.randomUUID(),
+        status: {
+          status: "Expected",
+          reason: "",
         },
-      },
-    },
-    email: "someemail@com",
-    cardConfirmed: false,
-    name: "Artanis Ashredar",
-    status: {
-      status: "Expected",
-      reason: "",
-    },
-    made: "By Phone",
-    pax: 4,
-    message: "Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message Some message ! Hope you got it!",
-    phone: "1123412341",
-    id: crypto.randomUUID(),
-  },
-  {
-    assignedSlot: {
-      Bar: {
-        T10: {
-          startTime: "9:00",
-          bookedSlots: "5",
-          bookedTimes: ["09:00", "09:15", "09:30", "09:45", "10:00"],
+        email: "someemail@com",
+        assignedSlot: {
+          Restaurant: {
+            T1: {
+              startTime: "8:15",
+              bookedTimes: ["08:15", "08:30", "08:45", "09:00", "09:15"],
+              bookedSlots: "5",
+            },
+          },
         },
+        date: "02/01/2024",
       },
-    },
-    made: "Online",
-    date: "01/01/2024",
-    name: "High Executor Selendis",
-    pax: 3,
-    message: "Some short message",
-    status: {
-      reason: "",
-      status: "Expected",
-    },
-    phone: "1123412341",
-    id: crypto.randomUUID(),
-    desiredStartTime: "9:15",
-    cardConfirmed: true,
-    email: "someemail@com",
-  },
-];
+      {
+        date: "02/01/2024",
+        startTime: "7:15",
+        desiredStartTime: "7:15",
+        assignedSlot: {
+          Bar: {
+            T10: {
+              bookedTimes: ["07:00", "07:15", "07:30", "07:45", "08:00"],
+              bookedSlots: "5",
+              startTime: "7:00",
+            },
+          },
+        },
+        email: "someemail@com",
+        cardConfirmed: false,
+        name: "Jack ONeill",
+        status: {
+          status: "Expected",
+          reason: "",
+        },
+        made: "By Phone",
+        pax: 4,
+        message: "Some message Some mes ! Hope you got it!",
+        phone: "1123412341",
+        id: crypto.randomUUID(),
+      },
+      {
+        assignedSlot: {
+          Bar: {
+            T10: {
+              startTime: "9:00",
+              bookedSlots: "5",
+              bookedTimes: ["09:00", "09:15", "09:30", "09:45", "10:00"],
+            },
+          },
+        },
+        made: "Online",
+        date: "02/01/2024",
+        name: "George Hammond",
+        pax: 3,
+        message: "Some short message",
+        status: {
+          reason: "",
+          status: "Expected",
+        },
+        phone: "1123412341",
+        id: crypto.randomUUID(),
+        desiredStartTime: "9:15",
+        cardConfirmed: true,
+        email: "someemail@com",
+      },
+    ],
+  };
+  addDoc(collection(db, "bookings"), x);
+};
 
 // addSomeData()
-export { db, app, auth, signInWithGoogle, logOut, logInWithEmailAndPassword };
+
+const addNewBooking = async (venue, data) => {
+  try {
+    const q = await query(collection(db, "bookings"), where("venueNdate", "==", venue));
+    const docx = await getDocs(q);
+    console.log("🚀 ~ file: firebaseConfig.jsx:173 ~ addNewBooking ~ docx:", docx);
+    if (!docx.docs[0]) {
+      
+      await addDoc(collection(db, "bookings"), {
+        venueNdate: venue,
+        bookings: [data]
+      });
+      return "success. added new.";
+    } else {
+      const docRef = doc(db, "bookings", docx.docs[0].id);
+      console.log("🚀 ~ file: firebaseConfig.jsx:175 ~ addNewBooking ~ docRef:", docRef);
+      let updatedData = docx.docs[0].data();
+      console.log("🚀 ~ file: firebaseConfig.jsx:177 ~ addNewBooking ~ updatedData:", updatedData);
+      updatedData.bookings.push(data);
+      await updateDoc(docRef, updatedData, { merge: true });
+      return "success. updated existing.";
+    }
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export { db, app, auth, signInWithGoogle, logOut, logInWithEmailAndPassword, addNewBooking };

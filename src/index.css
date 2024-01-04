@@ -68,15 +68,121 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   scrollbar-color: #2d3748 #a0aec0; /* Change the colors on hover as needed */
 }
 
-
-.ani{
+.ani {
   animation: fade-in forwards;
   animation-timeline: view();
   animation-range-start: contain 0px;
   animation-range-end: cover 20svh;
 }
 
-@keyframes fade-in{
-  from {scale:.8; opacity: 0;}
-  to {scale:1; opacity: 1;}
+@keyframes fade-in {
+  from {
+    scale: 0.8;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+.hcBG {
+  --s: 19px; /* control the size */
+
+  --c: #0000, #fdbe1083 0.5deg 119.5deg, #0000 120deg;
+  --g1: conic-gradient(from 60deg at 56.25% calc(425% / 6), var(--c));
+  --g2: conic-gradient(from 180deg at 43.75% calc(425% / 6), var(--c));
+  --g3: conic-gradient(from -60deg at 50% calc(175% / 12), var(--c));
+  background: var(--g1), var(--g1) var(--s) calc(1.73 * var(--s)), var(--g2), var(--g2) var(--s) calc(1.73 * var(--s)), var(--g3) var(--s) 0, var(--g3) 0 calc(1.73 * var(--s)) #7c4b0096;
+  background-size: calc(2 * var(--s)) calc(3.46 * var(--s));
+}
+
+.row {
+  display: block;
+  width: 100svw;
+  height: 125px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: -35px;
+  margin-left: -33px;
+}
+.row .hexagon {
+  position: relative;
+  width: 100px;
+  height: 57.74px;
+  background-color: white;
+  margin: 32.87px 2px;
+  display: block;
+  transition: all 0.2s linear;
+}
+.row .hexagon::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  top: 100%;
+  width: 0;
+  border-top: 28.87px solid white;
+  transition: all 0.2s linear;
+}
+.row .hexagon::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  bottom: 100%;
+  border-bottom: 28.87px solid white;
+  transition: all 0.2s linear;
+}
+.row.row-moved {
+  margin-left: 19px;
+}
+
+.cursor {
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  position: absolute;
+  box-shadow: 2px -3px 41px -1px rgba(241, 196, 15, 0.64);
+  z-index: 0;
+  opacity: 0;
+  background: linear-gradient(135deg, #e8f74d, #ff6600);
+  background-size: 400%;
+  animation: glower 26s linear infinite;
+  filter: blur(40px);
+}
+@keyframes glower {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+/* z-[-1] top-0 absolute h-[100px] w-[120px] bg-gradient-to-br from-orange-400 via-orange-600 to-orange-200 border-black"
+ style={{ clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0 50%)" }} */
+.hc {
+  background: linear-gradient(135deg, #fb923c, #ea580c, #fed7aa);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  -webkit-clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  width: 120px;
+  height: 100px;
+  position: absolute;
+  z-index: -1;
+}
+
+.hc-no-bg {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  -webkit-clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  width: 120px;
+  height: 100px;
+  position: absolute;
 }

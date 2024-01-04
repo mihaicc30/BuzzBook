@@ -51,7 +51,7 @@ export const UnseatedData = ({ venueData }) => {
 
     switch (sortingField) {
       case "startTime":
-        return sortingValues[sortingField] === "asc" ? convertTimeToMinutes(a.assignedSlot[Object.keys(a.assignedSlot)[0]][Object.keys(Object.values(a.assignedSlot)[0])[0]].startTime) > convertTimeToMinutes(b.assignedSlot[Object.keys(b.assignedSlot)[0]][Object.keys(Object.values(b.assignedSlot)[0])[0]].startTime) : convertTimeToMinutes(a.assignedSlot[Object.keys(a.assignedSlot)[0]][Object.keys(Object.values(a.assignedSlot)[0])[0]].startTime) < convertTimeToMinutes(b.assignedSlot[Object.keys(b.assignedSlot)[0]][Object.keys(Object.values(b.assignedSlot)[0])[0]].startTime);
+        return sortingValues[sortingField] === "asc" ? convertTimeToMinutes(a.desiredStartTime) > convertTimeToMinutes(b.desiredStartTime) : convertTimeToMinutes(a.desiredStartTime) < convertTimeToMinutes(b.desiredStartTime);
 
       case "status":
         return sortingValues[sortingField] === "asc" ? a.status.status > b.status.status : a.status.status < b.status.status;

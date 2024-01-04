@@ -7,10 +7,12 @@ module.exports = {
   settings: { react: { version: "18.2" } },
   plugins: ["react-refresh", "tailwindcss"],
   rules: {
+    "tailwindcss/enforces-negative-arbitrary-values": "off",
     "tailwindcss/no-custom-classname": "off",
     "react/prop-types":"off",
     "no-unused-vars": "off",
     "no-unreachable": "off",
+    
     "tailwindcss/classnames-order": "off",
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
   },

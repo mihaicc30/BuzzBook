@@ -10,6 +10,7 @@ import Account from "../pages/Account"
 import TableDataModal from "./TableDataModal"
 import { AppContext } from "../App"
 import ModalUpdateDetails from "./ModalUpdateDetails"
+import CreateBooking from "../pages/CreateBooking"
 
 const Paths = () => {
   const { venueLayout, venueID, date, updateContext, contextBookings, contextCovers, modalData, modalUpdateDetails } = useContext(AppContext)
@@ -23,8 +24,9 @@ const Paths = () => {
           <div className={`h-[100svh] flex flex-col overflow-hidden`}>
             {modalData && <TableDataModal data={modalData} />}
             {modalUpdateDetails && <ModalUpdateDetails />}
-            <Navbar />
-            <div className={`relative flex flex-col ${loc.pathname === "/" ? "basis-[100%]" : "basis-[95%]"} overflow-hidden`}>
+            
+            {loc.pathname !== "/create-booking" && <Navbar />}
+            <div className={` relative flex flex-col ${loc.pathname === "/" ? "basis-[100%]" : "basis-[95%]"} overflow-hidden`}>
               <Outlet />
             </div>
           </div>
@@ -33,6 +35,7 @@ const Paths = () => {
         <Route path="/" element={<Auth />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/create-booking/:venue/:venueid" element={<CreateBooking />} />
         {/* <Route
           path="/activity"
           element={<RiderActivity />}
