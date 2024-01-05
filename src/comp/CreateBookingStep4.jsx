@@ -15,7 +15,7 @@ export default function CreateBookingStep4({ progOneValues, progTwoValues, progT
         setTimeout(async () => {
           let bookedVenue = `${progOneValues.venueData.id} ${String(progOneValues.dayQuery).padStart(2, "0") + "/" + progOneValues.dateValue.split("-")[1] + "/" + progOneValues.dateValue.split("-")[0]}`;
           let newBooking = {
-            message: progOneValues.message || "",
+            message: progTwoValues.message || "",
             made: "Booked Online",
             cardConfirmed: parseInt(progOneValues.partySize) > 3 && progThreeValues.cn ? true : false,
             id: crypto.randomUUID(),

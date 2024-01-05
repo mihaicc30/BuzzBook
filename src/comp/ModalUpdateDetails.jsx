@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaAngleLeft } from "react-icons/fa6";
 import { MdDeleteSweep } from "react-icons/md";
 import { AppContext } from "../App";
@@ -8,9 +8,11 @@ import { TiDelete } from "react-icons/ti";
 import { addDoc, collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export default function ModalUpdateDetails() {
   const { venueID, venueLayout, date, updateContext, contextBookings, contextCovers, modalData, modalUpdateDetails } = useContext(AppContext);
+  const nav = useNavigate();
 
   const {
     isPending,
@@ -33,7 +35,6 @@ export default function ModalUpdateDetails() {
   const mainModalRef = useRef(null);
   const waitTimer = useRef(null);
 
-  if (!modalUpdateDetails) return;
 
   const handleChange = (param, value) => {
     // todo - tempContext object to refactor. temporary use case
@@ -253,6 +254,7 @@ export default function ModalUpdateDetails() {
 
   const timeOptions = formatTimeForSelect();
 
+
   return (
     <div
       onClick={(e) => {
@@ -361,7 +363,7 @@ export default function ModalUpdateDetails() {
                 Section
               </label>
               <select id="modalTempSection" defaultValue={null} onChange={(e) => handleChange("section", e.target.value)}>
-                {( Object.keys(venueData?.layout).length > 0 || Object.keys(venueLayout).length > 0) &&
+                {(Object.keys(venueData?.layout).length > 0 || Object.keys(venueLayout).length > 0) &&
                   Object.keys(venueData.layout)
                     .sort()
                     .map((section) => (
@@ -498,6 +500,7 @@ export default function ModalUpdateDetails() {
                 </select>
               </div>
             )}
+            {modalUpdateDetails[1].assignedSlot && (
             <div className="flex flex-col gap-x-2 capitalize break-all">
               <label className="border-b-2" htmlFor="modalTempStartTime">
                 Arrival
@@ -511,6 +514,7 @@ export default function ModalUpdateDetails() {
                 ))}
               </select>
             </div>
+            )}
 
             <div className="flex flex-col gap-x-2 capitalize break-all">
               <label className="border-b-2" htmlFor="modalTempbookedSlots">

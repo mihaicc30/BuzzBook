@@ -24,8 +24,24 @@ const db = getFirestore(app);
 
 const googleProvider = new GoogleAuthProvider();
 
-const logInWithEmailAndPassword = async () => {
-  await signInWithEmailAndPassword(auth, "test@user.com", "test@user.com");
+const logOut = () => {
+  signOut(auth);
+};
+
+const logInWithEmailAndPassword = async (loginDetails) => {
+  try {
+    await signInWithEmailAndPassword(auth, loginDetails.e, loginDetails.p);
+  } catch (error) {
+    return error.message;
+  }
+};
+
+const logIntoTestUser = async () => {
+  try {
+    await signInWithEmailAndPassword(auth, import.meta.env.VITE_TESTU, import.meta.env.VITE_TESTP);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const signInWithGoogle = async () => {
@@ -37,28 +53,27 @@ const signInWithGoogle = async () => {
     const q = query(collection(db, "users"), where("email", "==", user.email));
     const docs = await getDocs(q);
     if (docs.docs.length < 1) {
-      // Add user to Firestore if not already exists
-      const newUserRef = await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        accountType: "host",
-        displayName: auth.currentUser.displayName,
-        username: auth.currentUser.displayName,
-        email: auth.currentUser.email,
-        avatar: auth.currentUser.photoURL || "",
-        date: new Date().getTime(),
-      });
-      console.log("User does not exists in Firestore. New user added with ID: ", user.uid);
+      
+      signOut(auth)
+      console.log("User is not registred.");
+      // // Add user to Firestore if not already exists
+      // const newUserRef = await addDoc(collection(db, "users"), {
+      //   uid: user.uid,
+      //   accountType: "host",
+      //   displayName: auth.currentUser.displayName,
+      //   username: auth.currentUser.displayName,
+      //   email: auth.currentUser.email,
+      //   avatar: auth.currentUser.photoURL || "",
+      //   date: new Date().getTime(),
+      // });
+      // console.log("User does not exists in Firestore. New user added with ID: ", user.uid);
     } else {
       console.log("User already exists in Firestore. No updates needed.");
     }
-    console.log("Popup is successfull. Proceeding...");
+    // console.log("Popup is successfull. Proceeding...");
   } catch (error) {
     if (error == "FirebaseError: Firebase: Error (auth/popup-closed-by-user).") console.log("User closed login popup.");
   }
-};
-
-const logOut = () => {
-  signOut(auth);
 };
 
 const addSomeData = () => {
@@ -172,10 +187,9 @@ const addNewBooking = async (venue, data) => {
     const docx = await getDocs(q);
     console.log("🚀 ~ file: firebaseConfig.jsx:173 ~ addNewBooking ~ docx:", docx);
     if (!docx.docs[0]) {
-      
       await addDoc(collection(db, "bookings"), {
         venueNdate: venue,
-        bookings: [data]
+        bookings: [data],
       });
       return "success. added new.";
     } else {
@@ -192,4 +206,4 @@ const addNewBooking = async (venue, data) => {
   }
 };
 
-export { db, app, auth, signInWithGoogle, logOut, logInWithEmailAndPassword, addNewBooking };
+export { db, app, auth, signInWithGoogle, logOut, logInWithEmailAndPassword, logIntoTestUser, addNewBooking };

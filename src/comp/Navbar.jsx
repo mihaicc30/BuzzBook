@@ -1,20 +1,20 @@
-import React, { useRef, useState } from "react"
-import { RxDashboard } from "react-icons/rx"
-import { MdOutlineMenuOpen } from "react-icons/md"
-import { NavLink, useNavigate, useLocation } from "react-router-dom"
-import { useSignOut } from "react-firebase-hooks/auth"
-import { auth } from "../firebaseConfig"
-import Datepicker from "./Datepicker"
+import React, { useRef, useState } from "react";
+import { RxDashboard } from "react-icons/rx";
+import { MdOutlineMenuOpen } from "react-icons/md";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useSignOut } from "react-firebase-hooks/auth";
+import { auth } from "../firebaseConfig";
+import Datepicker from "./Datepicker";
 
 export default function Navbar() {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
   return (
-    <>
+    <div className="flex basis-[5%] justify-between px-2 border-b-2 max-[460px]:flex-col">
       {pathname !== "/" && !pathname.startsWith("/create-booking") && (
-        <div className="flex basis-[5%] justify-between px-2 border-b-2 max-[460px]:flex-col">
+        <>
           <div className="h-full flex justify-center items-center my-auto">
-            <img src={`${pathname.startsWith("/create-booking") ? "../../assets/ic.png" : "./assets/ic.png"}` } alt="Logo" className="h-auto w-[60px]" />
+            <img src={`${pathname.startsWith("/create-booking") ? "../../assets/ic.png" : "./assets/ic.png"}`} alt="Logo" className="h-auto w-[60px]" />
             <div className="flex flex-col justify-center items-center h-full mt-[8px]">
               <h1 className="text-center text-[1.8rem] tracking-widest leading-[18px] text-[#181831] ff">Buzz</h1>
               <h1 className="text-center text-[1rem] tracking-widest leading-[18px] text-[#B74216]">
@@ -33,26 +33,26 @@ export default function Navbar() {
           <div className="flex justify-center items-center max-[460px]:hidden">
             <SideMenu cln="border-2 rounded-lg shadow-md m-1 text-4xl p-1" />
           </div>
-        </div>
+        </>
       )}
-    </>
-  )
+    </div>
+  );
 }
 
 function SideMenu({ cln }) {
-  const [signOut, loading, error] = useSignOut(auth)
-  const nav = useNavigate()
-  const { pathname } = useLocation()
-  const [modal, setModal] = useState(false)
-  const mainModalRef = useRef(null)
-  const secModalRef = useRef(null)
+  const [signOut, loading, error] = useSignOut(auth);
+  const nav = useNavigate();
+  const { pathname } = useLocation();
+  const [modal, setModal] = useState(false);
+  const mainModalRef = useRef(null);
+  const secModalRef = useRef(null);
 
   const handleLogout = async () => {
-    const success = await signOut()
+    const success = await signOut();
     if (success) {
-      nav("/")
+      nav("/");
     }
-  }
+  };
   return (
     <>
       <button className={`${cln}`} onClick={() => setModal(!modal)}>
@@ -63,55 +63,52 @@ function SideMenu({ cln }) {
           ref={mainModalRef}
           onClick={(e) => {
             if (pathname !== "/" && String(e.target.className)?.startsWith("mainModal") && !String(mainModalRef.current.className).includes("fadeOUT")) {
-              mainModalRef.current.className = String(mainModalRef.current.className).replace("fadeIN", "fadeOUT")
-              setModal(!modal)
+              mainModalRef.current.className = String(mainModalRef.current.className).replace("fadeIN", "fadeOUT");
+              setModal(!modal);
             }
           }}
-          className={`mainModal absolute inset-0 flex flex-col bg-gray-800/50 z-[19] animate-fadeIN  transition overflow-hidden`}
-        >
+          className={`mainModal absolute inset-0 flex flex-col bg-gray-800/50 z-[19] animate-fadeIN  transition overflow-hidden`}>
           <div ref={secModalRef} className={`secModal overflow-y-auto absolute top-0 bot-0 right-0 flex flex-col bg-gray-50 z-20 h-[100svh] transition animate-fadeIN`} style={{ width: `250px`, clipPath: "polygon(0 0, 100% 0%, 100% 100%, 0 100%, 8% 77%)" }}>
-            
             <div className="flex flex-col justify-center items-center mt-[8px] pb-6 border-b-2">
-            <img src="./assets/ic.png" alt="Logo" className="h-auto w-[60px]" />
+              <img src="./assets/ic.png" alt="Logo" className="h-auto w-[60px]" />
               <h1 className="text-center text-[1.8rem] tracking-widest leading-[18px] text-[#181831] ff">Buzz</h1>
               <h1 className="text-center text-[1rem] tracking-widest leading-[18px] text-[#B74216]">
                 <span>-</span>
                 <span className="ff">BOOK</span>
                 <span>-</span>
               </h1>
-              <button className="p-2 m-2 border-2 rounded-lg active:scale-[0.9] transition" onClick={toggleFullScreen}>Toggle FullScreen</button>
+              <button className="p-2 m-2 border-2 rounded-lg active:scale-[0.9] transition" onClick={toggleFullScreen}>
+                Toggle FullScreen
+              </button>
             </div>
 
             <NavLink
               onClick={(e) => {
-                setModal(!modal)
+                setModal(!modal);
               }}
               to="/dashboard"
-              className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}
-            >
+              className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}>
               <span className="text-xl leading-10 my-4">Dash</span>
               <span className=" border-b-2 border-b-blue-500 h-1 w-full"></span>
             </NavLink>
 
             <NavLink
               onClick={(e) => {
-                setModal(!modal)
+                setModal(!modal);
               }}
               to="/account"
-              className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}
-            >
+              className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}>
               <span className="text-xl leading-10 my-4">Account</span>
               <span className=" border-b-2 border-b-blue-500 h-1 w-full"></span>
             </NavLink>
 
             <NavLink
               onClick={async (e) => {
-                e.preventDefault()
-                handleLogout()
+                e.preventDefault();
+                handleLogout();
               }}
               className={({ isActive, isPending }) => (isPending ? "pending text-center text-blue-500 transition flex flex-col justify-center items-center" : isActive ? "active text-center text-blue-500 transition flex flex-col justify-center items-center" : "text-center transition opacity-10 flex flex-col justify-center items-center ")}
-              to="/"
-            >
+              to="/">
               <span className="text-xl leading-10 my-4">Logout</span>
               <span className=" border-b-2 border-b-blue-500 h-1 w-full"></span>
             </NavLink>
@@ -119,7 +116,7 @@ function SideMenu({ cln }) {
         </div>
       )}
     </>
-  )
+  );
 }
 
 function toggleFullScreen() {

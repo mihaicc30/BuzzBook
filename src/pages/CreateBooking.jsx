@@ -222,7 +222,6 @@ export default function CreateBooking() {
     return false;
   };
   const validateProgress3 = () => {
-    if (!cardValidator.isCreditCard(progThreeValues.cn)) return true;
     if (cardValidator.detectCardType(progThreeValues.cn) === "invalid") return true;
     if (!cardValidator.validateCVVORCVCCode(progThreeValues.cvv)) return true;
 
@@ -301,9 +300,6 @@ export default function CreateBooking() {
     inputDate.setHours(currentDate.getHours() + 1);
     inputDate.setMinutes(currentDate.getMinutes());
     inputDate.setSeconds(currentDate.getSeconds());
-    // console.log(inputDate >= currentDate)
-    // console.log(inputDate)
-    // console.log(currentDate)
     return inputDate >= currentDate;
   };
 
@@ -331,7 +327,12 @@ export default function CreateBooking() {
               </h1>
             </div>
           </div>
-          <div className="flex justify-between">
+          {progress !== 4 && dateIsInThePast(progOneValues.dayQuery) && <p className="col-span-full italic text-center">{`Looking to book a party of ${progOneValues.partySize} at ${progOneValues.timeSlot} on ${progOneValues.dayQuery} ${new Date(progOneValues.dateValue).toLocaleString("en-GB", { month: "long", year: "numeric" })}.`}</p>}
+          {progress === 1 && <CreateBookingStep1 progOneValues={progOneValues} setProgOneValues={setProgOneValues} timeOptions={timeOptions} daysInMonth={daysInMonth} handleMonthDateChange={handleMonthDateChange} />}
+          {progress === 2 && <CreateBookingStep2 progTwoValues={progTwoValues} setProgTwoValues={setProgTwoValues} />}
+          {progress === 3 && <CreateBookingStep3 progThreeValues={progThreeValues} setProgThreeValues={setProgThreeValues} />}
+          {progress === 4 && <CreateBookingStep4 progFourValues={progFourValues} progOneValues={progOneValues} progTwoValues={progTwoValues} progThreeValues={progThreeValues} setProgFourValues={setProgFourValues} />}
+          <div className="flex justify-between my-8">
             {!progFourValues.loading && progress !== 1 && (
               <button onClick={handleBack} className={`flex flex-nowrap items-center border-b-2 border-b-orange-400`}>
                 <FaAngleLeft className="" />
@@ -344,16 +345,12 @@ export default function CreateBooking() {
               </button>
             )}
           </div>
-          {progress !== 4 && dateIsInThePast(progOneValues.dayQuery) && <p className="col-span-full italic text-center">{`Looking to book a party of ${progOneValues.partySize} at ${progOneValues.timeSlot} on ${progOneValues.dayQuery} ${new Date(progOneValues.dateValue).toLocaleString("en-GB", { month: "long", year: "numeric" })}.`}</p>}
-          {progress === 1 && <CreateBookingStep1 progOneValues={progOneValues} setProgOneValues={setProgOneValues} timeOptions={timeOptions} daysInMonth={daysInMonth} handleMonthDateChange={handleMonthDateChange} />}
-          {progress === 2 && <CreateBookingStep2 progTwoValues={progTwoValues} setProgTwoValues={setProgTwoValues} />}
-          {progress === 3 && <CreateBookingStep3 progThreeValues={progThreeValues} setProgThreeValues={setProgThreeValues} />}
-          {progress === 4 && <CreateBookingStep4 progFourValues={progFourValues} progOneValues={progOneValues} progTwoValues={progTwoValues} progThreeValues={progThreeValues} setProgFourValues={setProgFourValues} />}
         </div>
       )}
     </>
   );
 }
+
 const getDaysInMonth = (year, month, dayIndex) => {
   const totalDays = new Date(year, month + 1, 0).getDate();
   const daysArray = Array.from({ length: totalDays + dayIndex }, (_, i) => i + 2 - dayIndex);

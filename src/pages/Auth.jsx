@@ -1,19 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FaBlenderPhone, FaChevronDown } from "react-icons/fa";
-import { VscVerifiedFilled } from "react-icons/vsc";
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../firebaseConfig";
+import { auth, logInWithEmailAndPassword, logIntoTestUser, signInWithGoogle } from "../firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { GiFlexibleStar } from "react-icons/gi";
-import { AiFillSignal } from "react-icons/ai";
-import { SiSimpleanalytics } from "react-icons/si";
-import { MdPhonelinkSetup } from "react-icons/md";
-import { LuServerCog } from "react-icons/lu";
 
 export default function Auth() {
   const nav = useNavigate();
   const [user, loading, error] = useAuthState(auth);
+  const [loginDetails, setLoginDetails] = useState({
+    e: "",
+    p: "",
+  });
 
   useEffect(() => {
     if (user) nav("/dashboard");
@@ -30,24 +26,40 @@ export default function Auth() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const handleSignInWithCredentials = async () => {
+    const q = await logInWithEmailAndPassword(loginDetails);
+    if (String(q).startsWith("Firebase")) {
+      setLoginDetails((prev) => ({ ...prev, err: "Invalid credentials." }));
+    } else {
+      setLoginDetails({
+        e: "",
+        p: "",
+      });
+    }
+  };
+
+  const logInWithGoogle = async() => {
+    await signInWithGoogle()
+  }
+
   return (
     <>
       {hcPattern()}
 
-      <div className=" flex flex-col z-10 bg-[#69696917] w-[100svw] mx-auto overflow-y-auto">
+      <div className=" flex flex-col z-10 bg-[#69696917] w-[100svw] mx-auto overflow-y-auto overflow-x-hidden">
         <nav className={`absolute left-0 top-0 flex w-full justify-end pt-2 pb-4 px-8 z-10 bg-gradient-to-b from-90% from-[#f5f5f5fa] to-transparent`}>
-          <button className={`px-2 py-1 group  cursor-pointer relative z-20`}>
-            <span className="text-lg font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap">Features</span>
+          <button className={`max-md:hidden px-2 py-1 group  cursor-pointer relative z-20`}>
+            <span className="text-lg font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">Features</span>
           </button>
 
-          <button className={`px-2 py-1 group  cursor-pointer relative z-20`}>
-            <span className="text-lg font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap">Pricing</span>
+          <button className={`max-md:hidden px-2 py-1 group  cursor-pointer relative z-20`}>
+            <span className="text-lg font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">Pricing</span>
           </button>
 
-          <button className={`px-2 py-1 group  cursor-pointer relative z-20`}>
+          <button className={`max-md:hidden px-2 py-1 group  cursor-pointer relative z-20`}>
             <span className="text-lg font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
               Support
-              <FaChevronDown />
+              <FaChevronDown className="text-sm" />
             </span>
             <span className="hidden group-focus:flex absolute top-[100%] left-1/2 -translate-x-1/2 flex-col justify-center  z-30 animate-fadeIN">
               <span className="my-1 p-2 cursor-pointer z-40 flex flex-nowarp items-center whitespace-nowrap bg-white border-2 rounded-lg">
@@ -65,25 +77,94 @@ export default function Auth() {
             </span>
           </button>
 
-          <button className={`px-2 py-1 group  cursor-pointer relative z-20`}>
-            <span className="text-lg font-[700] border-[1px] border-orange-400 bg-orange-400 text-[#16172F] rounded-lg px-4 py-1 whitespace-nowrap">Book Demo</span>
+          <button className={`max-md:hidden px-2 py-1 group  cursor-pointer relative z-20`}>
+            <span className="text-lg font-[600] border-[1px] border-orange-400 bg-orange-400 text-[#16172F] rounded-lg px-4 py-1 whitespace-nowrap">Book Demo</span>
           </button>
 
           <button className={`px-2 py-1 group  cursor-pointer relative z-20`}>
             <span className="text-lg font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
               Sign in
-              <FaChevronDown />
+              <FaChevronDown className="text-sm" />
             </span>
-            <span className="hidden absolute top-[100%] right-0 flex-col justify-center group-focus:flex z-30 pr-4 animate-fadeIN">
-              <span onClick={() => signInWithGoogle()} className="my-1 p-2 cursor-pointer z-40 flex flex-nowarp items-center whitespace-nowrap bg-white border-2 rounded-lg">
-                <FcGoogle className="text-xl min-w-[50px]" /> Sign in with Google
+            {/* hidden group-focus-within: */}
+            <span className="hidden group-focus-within:flex absolute top-[100%] right-0 max-md:-right-[70%] max-w-[90svw] flex-col justify-center z-30 pr-4 animate-fadeIN">
+              <span onClick={logInWithGoogle} className="my-1 p-2 max-[400px]:p-1 cursor-pointer z-40 flex flex-nowarp items-center whitespace-nowrap bg-white border-2 rounded-lg">
+                <FcGoogle className="text-xl min-w-[30px] max-[300px]:min-w-[20px]" /> Sign in with Google
               </span>
-              <span onClick={() => logInWithEmailAndPassword()} className="my-1 p-2 cursor-pointer z-40 flex flex-nowarp items-center whitespace-nowrap bg-white border-2 rounded-lg">
-                <VscVerifiedFilled className="text-xl min-w-[50px] text-blue-600" /> Sign in with Test Account
+
+              <span onClick={() => logIntoTestUser()} className="my-1 p-2 max-[400px]:p-1 cursor-pointer z-40 flex flex-nowarp items-center whitespace-nowrap bg-white border-2 rounded-lg">
+                <VscVerifiedFilled className="text-xl min-w-[30px] max-[300px]:min-w-[20px] text-blue-600" /> Sign in with Test Account
+              </span>
+
+              <div className="flex flex-col p-1 my-1 rounded-lg bg-white">
+                <p className=" ">- or -</p>
+                {loginDetails?.err && <p className="text-red-400 text-start px-1">{loginDetails.err}</p> }
+                <input
+                  name="email"
+                  type="text"
+                  value={loginDetails.e}
+                  onChange={(e) => {
+                    setLoginDetails((prev) => ({ ...prev, e: e.target.value }));
+                  }}
+                  className=" px-2 py-1 my-1 border-2 rounded-lg"
+                  placeholder="Email"
+                />
+                <input
+                  name="password"
+                  type="password"
+                  value={loginDetails.p}
+                  onChange={(e) => {
+                    setLoginDetails((prev) => ({ ...prev, p: e.target.value }));
+                  }}
+                  className=" px-2 py-1 my-1 border-2 rounded-lg"
+                  placeholder="Password"
+                />
+                <span onClick={handleSignInWithCredentials} className="text-sm px-2 py-1 my-1 rounded-lg ml-auto bg-orange-400">
+                  Sign In
+                </span>
+              </div>
+            </span>
+          </button>
+
+          <button className={`max-md:flex hidden px-2 py-1 group  cursor-pointer relative z-20`}>
+            <span className="text-3xl h-[38px] font-[600] border-[1px] border-orange-400 group-focus:bg-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center">
+              <IoMenu />
+            </span>
+            <span className="hidden group-focus:flex absolute top-[100%] bg-[#f5f5f5fa] rounded-b-lg right-0 w-[86svw] flex-col justify-center z-30 animate-fadeIN">
+              <span className={` px-2 py-1 group  cursor-pointer relative z-20`}>
+                <span className="font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">Features</span>
+              </span>
+
+              <span className={`px-2 py-1 group  cursor-pointer relative z-20  rounded-b-lg`}>
+                <span className="font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">Pricing</span>
+              </span>
+
+              <span className={`mx-2 py-1 group  cursor-pointer relative z-20  rounded-lg bg-orange-400`}>
+                <span className="font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">Book Demo</span>
+              </span>
+
+              <span className={`px-2 py-1 group  cursor-pointer relative z-20`}>
+                <span className="font-[600] border-[1px] border-orange-400 rounded-lg px-4 py-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
+                  Support
+                  <FaChevronDown className="text-sm" />
+                </span>
+                <span className="ml-8 my-2 font-[600] border-[1px] border-orange-400 rounded-lg p-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
+                  <LuServerCog className="text-xl min-w-[50px] text-green-500" /> Training
+                </span>
+                <span className="ml-8 my-2 font-[600] border-[1px] border-orange-400 rounded-lg p-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
+                  <MdPhonelinkSetup className="text-xl min-w-[50px] text-purple-500" /> Setup
+                </span>
+                <span className="ml-8 my-2 font-[600] border-[1px] border-orange-400 rounded-lg p-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
+                  <SiSimpleanalytics className="text-xl min-w-[50px] text-yellow-500" /> Suggestion
+                </span>
+                <span className="ml-8 my-2 font-[600] border-[1px] border-orange-400 rounded-lg p-1 whitespace-nowrap flex flex-nowrap items-center gap-x-2">
+                  <FaBlenderPhone className="text-xl min-w-[50px] text-blue-500" /> Contact
+                </span>
               </span>
             </span>
           </button>
         </nav>
+
         <div className="w-full flex flex-col justify-center items-center mt-[150px]">
           <div className="w-full flex justify-center items-center mt-4 relative">
             <img src="./assets/ic.png" alt="Logo" className="h-auto w-[300px]" />
@@ -108,6 +189,7 @@ export default function Auth() {
             </h1>
           </div>
         </div>
+
         <div className="flex flex-col w-full relative my-[10vh]">
           <div className="relative flex flex-wrap justify-center h-[210px]">
             <div className="relative flex basis-[120px]">
@@ -121,16 +203,19 @@ export default function Auth() {
             </div>
           </div>
         </div>
-        <div className="flex max-[800px]:flex-col justify-between max-w-[1200px] mx-auto ">
-          <div className="basis-1/2 flex flex-col gap-y-8">
+
+        <div className="flex max-[800px]:flex-col justify-between max-w-[1200px] mx-auto transition duration-500">
+          <div className="basis-1/2 flex flex-col gap-y-8 px-4">
             <p className="max-w-[750px] text-lg font-bold">Elevate Your Business</p>
             <p className="font-[500]">Buzz Book represents an sophisticated and professional solution designed for the meticulous management of bookings across a diverse array of establishments, including but not limited to restaurants, bars, cafes, bistros, hotels, pubs, clubs, barbershops, nail salons, and similar service-oriented businesses. This platform acts as a stimulant to help these businesses not only meet but also exceed their customers expectations.</p>
             <p className="font-[500]">Buzz Book can effectively and precisely handle all of your needs, regardless of whether your goal is to expedite online reservations, optimise table turnover, improve phone booking operations, or organise events with ease.</p>
           </div>
-
-          {img === 1 && <img src={`./assets/ss${img}.png`} className="basis-1/2 rounded-xl border-2 mx-2 w-auto aspect-square animate-fadeIN transition max-h-[500px]" alt="ss1" />}
-          {img === 2 && <img src={`./assets/ss${img}.png`} className="basis-1/2 rounded-xl border-2 mx-2 w-auto aspect-square animate-fadeIN transition max-h-[500px]" alt="ss2" />}
+          <div className="basis-1/2 rounded-xl mx-2 h-[500px] max-[800px]:mx-auto max-w-[50svw] max-[800px]:max-w-[80svw] aspect-square animate-fadeIN transition">
+            {img === 1 && <img src={`./assets/ss${img}.png`} className="p-2 rounded-xl" alt="ss1" />}
+            {img === 2 && <img src={`./assets/ss${img}.png`} className="p-2 rounded-xl" alt="ss2" />}
+          </div>
         </div>
+
         <div className="flex flex-col w-full relative my-[10vh]">
           <div className="relative flex flex-wrap justify-center h-[210px] max-[283px]:flex-wrap-reverse">
             <div className="relative flex justify-center items-center h-full">
@@ -144,28 +229,30 @@ export default function Auth() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 max-md:grid-cols-2 gap-2 px-2 max-w-[1200px] mx-auto relative">
+
+        <div className="grid grid-cols-4 max-md:grid-cols-2 gap-2 px-2 max-w-[1200px] mx-auto relative text-center">
           <div className="flex flex-col border-2 rounded-lg p-1 items-center gap-2 min-w-[130px] bg-white">
-            <AiFillSignal className="text-3xl min-w-[50px]" />
-            <h1 className="text-center text-lg font-bold">Services Solutions </h1>
-            <p className="font-[500]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste iure quo voluptate officia id, cum eligendi porro nostrum, sunt ex adipisci nemo totam. Quas veritatis totam beatae. Esse, cupiditate culpa.</p>
+            <GrCompliance className="my-2 text-5xl min-w-[50px]" />
+            <h1 className="text-center text-lg font-bold">Proven Solutions </h1>
+            <p className="font-[500]">Explore our catalog of solutions that have a proven track record and are tailored to meet your unique needs.</p>
           </div>
           <div className="flex flex-col border-2 rounded-lg p-1 items-center gap-2 min-w-[130px] bg-white">
-            <AiFillSignal className="text-3xl min-w-[50px]" />
-            <h1 className="text-center text-lg font-bold">Affordable Pricing </h1>
-            <p className="font-[500]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste iure quo voluptate officia id, cum eligendi porro nostrum, sunt ex adipisci nemo totam. Quas veritatis totam beatae. Esse, cupiditate culpa.</p>
+            <IoPricetags className="my-2 text-5xl min-w-[50px]" />
+            <h1 className="text-center text-lg font-bold">0% Commission</h1>
+            <p className="font-[500]">Enjoy a commission-free experience, regardless of the number of bookings, with our fixed monthly subscription model.</p>
           </div>
           <div className="flex flex-col border-2 rounded-lg p-1 items-center gap-2 min-w-[130px] bg-white">
-            <AiFillSignal className="text-3xl min-w-[50px]" />
+            <FaChargingStation className="my-2 text-5xl min-w-[50px]" />
             <h1 className="text-center text-lg font-bold"> Time-Saving Features </h1>
-            <p className="font-[500]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste iure quo voluptate officia id, cum eligendi porro nostrum, sunt ex adipisci nemo totam. Quas veritatis totam beatae. Esse, cupiditate culpa.</p>
+            <p className="font-[500]">Optimize your workflow with innovative features designed to save you time and effort.</p>
           </div>
           <div className="flex flex-col border-2 rounded-lg p-1 items-center gap-2 min-w-[130px] bg-white">
-            <AiFillSignal className="text-3xl min-w-[50px]" />
-            <h1 className="text-center text-lg font-bold">Rely On Support</h1>
-            <p className="font-[500]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste iure quo voluptate officia id, cum eligendi porro nostrum, sunt ex adipisci nemo totam. Quas veritatis totam beatae. Esse, cupiditate culpa.</p>
+            <MdOutlineSupportAgent className="my-2 text-5xl min-w-[50px]" />
+            <h1 className="text-center text-lg font-bold">Reduced no-shows</h1>
+            <p className="font-[500]">Minimize no-shows and boost reservations, ensuring the success of your events during busy periods.</p>
           </div>
         </div>
+
         <div className="flex flex-col w-full relative mt-[10vh] bg-orange-400 ">
           <div className="relative flex flex-wrap justify-center h-[210px] pt-4">
             <div className="relative flex basis-[120px]">
@@ -179,6 +266,7 @@ export default function Auth() {
             </div>
           </div>
         </div>
+
         <div className="flex flex-col w-full items-center relative mb-[10vh] pb-[10svh] pt-[5svh] bg-orange-400 z-[-1] -translate-y-2">
           <div className="flex flex-col w-[9C0svw] max-w-[1200px]">
             <p className="max-w-[750px] px-[5svw] text-lg font-[700]">Experience the future of business management.</p>
@@ -186,6 +274,7 @@ export default function Auth() {
             <p className="cursor-pointer ml-auto mr-[10svw] text-end text-lg p-2 text-white rounded-lg font-bold border-2 border-white">Join Buzz Book. Book Demo!</p>
           </div>
         </div>
+
         <div className="flex flex-col w-full relative my-[10vh]">
           <div className="relative flex flex-wrap justify-center h-[210px] max-[334px]:flex-wrap-reverse">
             <div className="relative flex justify-center items-center h-full">
@@ -293,60 +382,80 @@ export default function Auth() {
 
         <div className="flex flex-col max-w-[900px] mx-auto w-[80%]">
           <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
-            <summary className="transition animate-fadeIN font-[700]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, aperiam?</summary>
-            <p className="transition animate-fadeIN font-[500] my-2 px-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem amet ullam nam optio nesciunt quia architecto mollitia dicta reiciendis in porro sapiente sequi expedita, minus consequatur fuga ipsam autem adipisci animi repudiandae laudantium sunt incidunt accusamus! Accusamus animi in eos.</p>
+            <summary className="transition animate-fadeIN font-[700]">What is BuzzBook?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">BuzzBook is an advanced platform designed for the effective management of reservations and table settings in a diverse range of establishments, including restaurants, bars, cafes, bistros, hotels, pubs, clubs, barbershops, nail salons, and various service-oriented businesses. Tailored to exceed the expectations of patrons, BuzzBook is a professional solution crafted to elevate the operational efficiency of businesses within the hospitality industry.</p>
           </details>
           <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
-            <summary className="transition animate-fadeIN font-[700]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, aperiam?</summary>
-            <p className="transition animate-fadeIN font-[500] my-2 px-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem amet ullam nam optio nesciunt quia architecto mollitia dicta reiciendis in porro sapiente sequi expedita, minus consequatur fuga ipsam autem adipisci animi repudiandae laudantium sunt incidunt accusamus! Accusamus animi in eos.</p>
+            <summary className="transition animate-fadeIN font-[700]">What services does BuzzBook offer?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">BuzzBook is a comprehensive solution that caters to various needs, including online bookings, streamlined phone booking automation, efficient table turnover management, and seamless event coordination. Whether you aim to accept bookings online, enhance table profitability, manage events effortlessly, automate phone bookings, offer vouchers, or accept online payments, BuzzBook provides a comprehensive suite of tools to address these requirements.</p>
           </details>
           <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
-            <summary className="transition animate-fadeIN font-[700]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, aperiam?</summary>
-            <p className="transition animate-fadeIN font-[500] my-2 px-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem amet ullam nam optio nesciunt quia architecto mollitia dicta reiciendis in porro sapiente sequi expedita, minus consequatur fuga ipsam autem adipisci animi repudiandae laudantium sunt incidunt accusamus! Accusamus animi in eos.</p>
+            <summary className="transition animate-fadeIN font-[700]">Does BuzzBook charge commissions on bookings?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">No, BuzzBook operates on a commission-free model. Regardless of where the booking is made, be it through your website, social media channels, Reserve with Google, you won&apos;t incur any commission fees.</p>
           </details>
           <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
-            <summary className="transition animate-fadeIN font-[700]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, aperiam?</summary>
-            <p className="transition animate-fadeIN font-[500] my-2 px-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem amet ullam nam optio nesciunt quia architecto mollitia dicta reiciendis in porro sapiente sequi expedita, minus consequatur fuga ipsam autem adipisci animi repudiandae laudantium sunt incidunt accusamus! Accusamus animi in eos.</p>
+            <summary className="transition animate-fadeIN font-[700]">What integrations does BuzzBook offer?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">BuzzBook collaborates with a myriad of global technology businesses to enhance venue efficiency. Whether you need integrations with your POS, marketing communications, PMS, or complimentary booking partners, BuzzBook can support your venue&apos;s specific needs.</p>
           </details>
           <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
-            <summary className="transition animate-fadeIN font-[700]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, aperiam?</summary>
-            <p className="transition animate-fadeIN font-[500] my-2 px-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem amet ullam nam optio nesciunt quia architecto mollitia dicta reiciendis in porro sapiente sequi expedita, minus consequatur fuga ipsam autem adipisci animi repudiandae laudantium sunt incidunt accusamus! Accusamus animi in eos.</p>
+            <summary className="transition animate-fadeIN font-[700]">What plans does BuzzBook offer, and how do they differ?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">BuzzBook provides a range of plans to suit the needs of every venue, including Starter, Pro, Hive. Each plan offers core features with variations in the number of bookings. Additionally, BuzzBook Lite is a simplified version designed for venues transitioning from traditional &apos;paper&apos; diaries to digitizing records and accepting online bookings.</p>
           </details>
           <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
-            <summary className="transition animate-fadeIN font-[700]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, aperiam?</summary>
-            <p className="transition animate-fadeIN font-[500] my-2 px-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem amet ullam nam optio nesciunt quia architecto mollitia dicta reiciendis in porro sapiente sequi expedita, minus consequatur fuga ipsam autem adipisci animi repudiandae laudantium sunt incidunt accusamus! Accusamus animi in eos.</p>
+            <summary className="transition animate-fadeIN font-[700]">Who owns the customer&apos;s data in BuzzBook?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">As the venue, you are the controller of the customer&apos;s data in BuzzBook. BuzzBook acts as the processor, carrying out processing under your instructions. Anonymized data may be used by BuzzBook to analyze booking trends and user behavior for product enhancements, always prioritizing the venue&apos;s data control.</p>
+          </details>
+          <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
+            <summary className="transition animate-fadeIN font-[700]">Is BuzzBook available globally?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">Yes, BuzzBook is available worldwide, operating across various countries with regional teams situated in strategic locations.</p>
+          </details>
+          <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
+            <summary className="transition animate-fadeIN font-[700]">Does BuzzBook provide customer support?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">Absolutely. BuzzBook offers dedicated local support from hospitality tech professionals to assist venues with their specific needs. For more information, you can connect with the local support team through the BuzzBook Customer Hub.</p>
+          </details>
+          <details className="p-2 border-2 rounded-lg cursor-pointer bg-white">
+            <summary className="transition animate-fadeIN font-[700]">Can I see BuzzBook in action?</summary>
+            <p className="transition animate-fadeIN font-[500] my-2 px-4">Certainly! Book a demo with BuzzBook to witness how it seamlessly brings together reservation management and enhances the efficiency of your busy venue. Let&apos;s explore the possibilities together.</p>
           </details>
         </div>
 
-        <footer className="grid grid-cols-4 justify-items-center py-[10vh] mt-4 bg-orange-500" style={{ clipPath: "polygon(0 18%, 6% 18%, 12% 0, 18% 0, 24% 18%, 30% 18%, 36% 0, 42% 0, 48% 18%, 54% 18%, 60% 0, 66% 0, 72% 18%, 78% 18%, 83% 0, 89% 0, 94% 18%, 100% 18%, 100% 100%, 0 100%)" }}>
+        <footer className="grid grid-cols-4 max-sm:grid-cols-2 gap-4 justify-items-center max-sm:justify-items-start py-[10vh] mt-4 bg-orange-500" style={{ clipPath: "polygon(0 18%, 6% 18%, 12% 0, 18% 0, 24% 18%, 30% 18%, 36% 0, 42% 0, 48% 18%, 54% 18%, 60% 0, 66% 0, 72% 18%, 78% 18%, 83% 0, 89% 0, 94% 18%, 100% 18%, 100% 100%, 0 100%)" }}>
           <ul className="px-2">
-            <li className="font-[600] border-b border-yellow-400">Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
+            <li className="font-[600] border-b border-yellow-400">Features</li>
+            <li>
+              <div className="hc top-0"></div>Setup
+            </li>
+            <li>Ordering</li>
+            <li>Integrations</li>
           </ul>
           <ul className="px-2">
-            <li className="font-[600] border-b border-yellow-400">Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
+            <li className="font-[600] border-b border-yellow-400">Businesses</li>
+            <li>Restaurants</li>
+            <li>Pubs and Clubs</li>
+            <li>Salons and Barber Shops</li>
           </ul>
           <ul className="px-2">
-            <li className="font-[600] border-b border-yellow-400">Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
+            <li className="font-[600] border-b border-yellow-400">Resources</li>
+            <li>Customer Hub</li>
+            <li>Blog</li>
+            <li>FAQs</li>
           </ul>
           <ul className="px-2">
-            <li className="font-[600] border-b border-yellow-400">Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
-            <li>Lorem, ipsum.</li>
+            <li className="font-[600] border-b border-yellow-400">Company</li>
+            <li>About Us</li>
+            <li>Contact Us</li>
+            <li>Careers</li>
           </ul>
         </footer>
-        <div className="bg-orange-500 text-center">
-          BuzzBook {new Date().getFullYear()} @ Mihai Culea
+
+        <div className="bg-orange-500 text-center flex gap-2 flex-wrap px-[10svw] text-3xl">
+          <TiSocialFacebookCircular />
+          <TiSocialYoutube />
+          <TiSocialLinkedin />
+          <RiTwitterXFill />
         </div>
+
+        <div className="bg-orange-500 text-center">BuzzBook {new Date().getFullYear()} @ Mihai Culea</div>
       </div>
     </>
   );
@@ -2837,3 +2946,20 @@ function hcPattern() {
     </div>
   );
 }
+import { TiSocialFacebookCircular } from "react-icons/ti";
+import { TiSocialYoutube } from "react-icons/ti";
+import { TiSocialLinkedin } from "react-icons/ti";
+import { RiTwitterXFill } from "react-icons/ri";
+import { GiFlexibleStar } from "react-icons/gi";
+import { FcGoogle } from "react-icons/fc";
+import { FaBlenderPhone, FaChevronDown } from "react-icons/fa";
+import { VscVerifiedFilled } from "react-icons/vsc";
+import { AiFillSignal } from "react-icons/ai";
+import { SiSimpleanalytics } from "react-icons/si";
+import { MdPhonelinkSetup } from "react-icons/md";
+import { LuServerCog } from "react-icons/lu";
+import { IoPricetags } from "react-icons/io5";
+import { GrCompliance } from "react-icons/gr";
+import { FaChargingStation } from "react-icons/fa6";
+import { MdOutlineSupportAgent } from "react-icons/md";
+import { IoMenu } from "react-icons/io5";

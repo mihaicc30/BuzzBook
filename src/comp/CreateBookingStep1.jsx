@@ -12,15 +12,12 @@ export default function CreateBookingStep1({ progOneValues, setProgOneValues, ti
     inputDate.setHours(currentDate.getHours() + 1);
     inputDate.setMinutes(currentDate.getMinutes());
     inputDate.setSeconds(currentDate.getSeconds());
-    // console.log(inputDate >= currentDate)
-    // console.log(inputDate)
-    // console.log(currentDate)
     return inputDate >= currentDate;
   };
 
   useEffect(() => {
     setProgOneValues((prev) => ({ ...prev, timeSlot: timeOptions[0] }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeOptions[0]]);
 
   return (
@@ -73,11 +70,15 @@ export default function CreateBookingStep1({ progOneValues, setProgOneValues, ti
             </span>
           ))}
         </div>
-        {daysInMonth.map((day) => {
+        {daysInMonth.map((day, indexz) => {
           if (day < 32)
+        //   if (!progOneValues.dayQuery && day !== 0 &&
+        //  progOneValues.availability[`day${day}`].available &&
+        //   dateIsInThePast(day)) setProgOneValues((prev) => ({ ...progOneValues, dayQuery: day })) 
             // dateIsInThePast(day);
             return (
               <span
+     
                 onClick={() => {
                   if (day !== 0 && progOneValues.availability[`day${day}`].available && dateIsInThePast(day)) setProgOneValues((prev) => ({ ...progOneValues, dayQuery: day }));
                 }}
@@ -90,7 +91,7 @@ export default function CreateBookingStep1({ progOneValues, setProgOneValues, ti
         })}
       </div>
 
-      <div className="mt-10 px-1 pb-10" onClick={() => setModal(!modal)}>
+      <div className="px-1" onClick={() => setModal(!modal)}>
         You accept and commit to following our <span className="underline text-orange-400 cursor-pointer">Terms & Conditions</span> by using this service.
       </div>
 

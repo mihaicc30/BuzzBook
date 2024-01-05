@@ -1,27 +1,11 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../App";
 
-import { FaAngleLeft } from "react-icons/fa6";
-import { MdDeleteSweep } from "react-icons/md";
-import { RxLapTimer } from "react-icons/rx";
-import { PiIdentificationBadgeDuotone } from "react-icons/pi";
-import { MdOutlineDateRange } from "react-icons/md";
-import { PiWatchLight } from "react-icons/pi";
-import { MdTableBar } from "react-icons/md";
-import { CiWavePulse1 } from "react-icons/ci";
-import { IoPeopleSharp } from "react-icons/io5";
-import { FaMapLocation } from "react-icons/fa6";
-import { RiAccountPinBoxFill } from "react-icons/ri";
-import { GrTransaction } from "react-icons/gr";
-import { TiMessages } from "react-icons/ti";
-import { GiRotaryPhone } from "react-icons/gi";
-import { FaRegCreditCard } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function TableDataModal({ data }) {
   const [fadeOut, setFadeOut] = useState(false);
-  const { updateContext } = useContext(AppContext);
+  const { modalData, updateContext } = useContext(AppContext);
   const mainModalRef = useRef(null);
 
   const handleUpdate = (whatToUpdate) => {
@@ -88,17 +72,17 @@ export default function TableDataModal({ data }) {
             Update
           </span>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize break-all">
-            <CiWavePulse1  className="min-w-[16px]"/> Guest User
+            <CiWavePulse1 className="min-w-[16px]" /> Guest User
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize break-all">
-            <GiRotaryPhone  className="min-w-[16px]"/> {data.phone}
+            <GiRotaryPhone className="min-w-[16px]" /> {data.phone}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize break-all">
-            <RiAccountPinBoxFill  className="min-w-[16px]"/>
+            <RiAccountPinBoxFill className="min-w-[16px]" />
             {data.name}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize break-all">
-            <MdEmail  className="min-w-[16px]"/>
+            <MdEmail className="min-w-[16px]" />
             {data.email}
           </div>
           <div className={`flex flex-nowarp items-center gap-x-2 capitalize break-all ${data.cardConfirmed ? "" : "opacity-[0.2]"} `}>
@@ -106,50 +90,54 @@ export default function TableDataModal({ data }) {
             {data.cardConfirmed ? "Confirmed" : "Not confirmed"}
           </div>
           <div className={`flex flex-nowarp items-center gap-x-2 capitalize break-all ${data.message ? "" : "opacity-[0.2]"} `}>
-            <TiMessages  className="min-w-[16px]"/>
+            <TiMessages className="min-w-[16px]" />
             {data.message ? "Left message" : "No message"}
           </div>
         </div>
-          <div className="flex flex-nowarp items-center gap-x-2 capitalize col-span-full mt-2 px-4">
-            <p className="italic text-sm font-[600]">{data.name} looking to book at {data.desiredStartTime}</p>
-          </div>
+        <div className="flex flex-nowarp items-center gap-x-2 capitalize col-span-full mt-2 px-4">
+          <p className="italic text-sm font-[600]">
+            {data.name} looking to book at {data.desiredStartTime}
+          </p>
+        </div>
 
         <span className="h-[2px] w-[96%] min-h-[2px] mx-auto bg-black rounded-full my-8"></span>
         <div className="grid grid-cols-2 px-4 gap-x-4 relative">
-          <span onClick={() => handleUpdate(`${!data.assignedSlot ? 'unassignedSlot' : 'bookingDetails'}`)} className="absolute right-6 font-[600] rounded-xl text-sm px-4 py-2 top-[-50px] bg-orange-400 ">
+          <span onClick={() => handleUpdate(`${!data.assignedSlot ? "unassignedSlot" : "bookingDetails"}`)} className="absolute right-6 font-[600] rounded-xl text-sm px-4 py-2 top-[-50px] bg-orange-400 ">
             Update
           </span>
           <div className={`flex flex-nowarp items-center gap-x-2 capitalize ${data.status.status !== "Expected" ? "text-red-400" : ""}`}>
-            <RxLapTimer  className="min-w-[16px]"/> {data.status.status}
+            <RxLapTimer className="min-w-[16px]" /> {data.status.status}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize break-all">
-            <PiIdentificationBadgeDuotone className="min-w-[16px]"/> <span className="text-ellipsis line-clamp-1" title={data.id}>{data.id}</span>
+            <PiIdentificationBadgeDuotone className="min-w-[16px]" />{" "}
+            <span className="text-ellipsis line-clamp-1" title={data.id}>
+              {data.id}
+            </span>
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
-            <PiWatchLight  className="min-w-[16px]"/>
-            { !data.assignedSlot && "-" || (`${data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime} - ${generateTimeListOneExtra(data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].bookedSlots, data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime).at(-1)}`)}
+            <PiWatchLight className="min-w-[16px]" />
+            {(!data.assignedSlot && "-") || `${data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime} - ${generateTimeListOneExtra(data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].bookedSlots, data.assignedSlot[Object.keys(data.assignedSlot)[0]][Object.keys(Object.values(data.assignedSlot)[0])[0]].startTime).at(-1)}`}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
-            <MdOutlineDateRange  className="min-w-[16px]"/>
+            <MdOutlineDateRange className="min-w-[16px]" />
             {data.date}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
-            <MdTableBar  className="min-w-[16px]"/>
-            {data.assignedSlot && Object?.keys(data.assignedSlot[Object?.keys(data.assignedSlot)[0]])[0] || "-"}
+            <MdTableBar className="min-w-[16px]" />
+            {(data.assignedSlot && Object?.keys(data.assignedSlot[Object?.keys(data.assignedSlot)[0]])[0]) || "-"}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
-            <IoPeopleSharp  className="min-w-[16px]"/>
+            <IoPeopleSharp className="min-w-[16px]" />
             {data.pax}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
-            <FaMapLocation  className="min-w-[16px]"/>
-            {data.assignedSlot && Object?.keys(data.assignedSlot)[0]  || "-"}
+            <FaMapLocation className="min-w-[16px]" />
+            {(data.assignedSlot && Object?.keys(data.assignedSlot)[0]) || "-"}
           </div>
           <div className="flex flex-nowarp items-center gap-x-2 capitalize">
-            <GrTransaction  className="min-w-[16px]"/>
+            <GrTransaction className="min-w-[16px]" />
             {data.made}
           </div>
-
         </div>
 
         <span className="h-[2px] w-[96%] min-h-[2px] mx-auto bg-black rounded-full my-8"></span>
@@ -211,3 +199,20 @@ function generateTimeListOneExtra(slots, startTime) {
 
   return timeList;
 }
+
+import { FaAngleLeft } from "react-icons/fa6";
+import { MdDeleteSweep } from "react-icons/md";
+import { RxLapTimer } from "react-icons/rx";
+import { PiIdentificationBadgeDuotone } from "react-icons/pi";
+import { MdOutlineDateRange } from "react-icons/md";
+import { PiWatchLight } from "react-icons/pi";
+import { MdTableBar } from "react-icons/md";
+import { CiWavePulse1 } from "react-icons/ci";
+import { IoPeopleSharp } from "react-icons/io5";
+import { FaMapLocation } from "react-icons/fa6";
+import { RiAccountPinBoxFill } from "react-icons/ri";
+import { GrTransaction } from "react-icons/gr";
+import { TiMessages } from "react-icons/ti";
+import { GiRotaryPhone } from "react-icons/gi";
+import { FaRegCreditCard } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";

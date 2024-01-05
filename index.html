@@ -10,10 +10,9 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
-      
       document.addEventListener("mousemove", (e) => {
         let curs = document.querySelector(".cursor");
-        if(!curs) return
+        if (!curs) return;
         let x = e.pageX;
         let y = e.pageY;
         curs.style.left = x - 150 + "px";

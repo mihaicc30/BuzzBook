@@ -1,7 +1,15 @@
 import { useState } from "react";
+import cardValidator from "card-validator-utils";
 
 export default function CreateBookingStep3({ progThreeValues, setProgThreeValues }) {
   const [modal, setModal] = useState(false);
+
+  const validDate = () => {
+    if (String(progThreeValues.expiry).length <= 3) return false;
+    if (String(progThreeValues.expiry).length === 4 && !isDateInFuture(String(progThreeValues.expiry.substring(0, 2) + "/20" + progThreeValues.expiry.substring(2, 4)))) return false;
+    if (String(progThreeValues.expiry).length === 5 && !isDateInFuture(String(progThreeValues.expiry.substring(0, 2) + "/20" + progThreeValues.expiry.substring(3, 5)))) return false;
+    return true;
+  };
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
@@ -12,15 +20,15 @@ export default function CreateBookingStep3({ progThreeValues, setProgThreeValues
       {/* stop looking. obviously i wouldnt just let the card details in plain text...lol. whould have crypted the data or better again, set a stripe card validation so no payment data can be leaked 😉 */}
       <div className="relative w-full grid grid-cols-1">
         <p>Card Number</p>
-        <input value={progThreeValues.cn} onChange={(e) => setProgThreeValues((prev) => ({ ...prev, cn: e.target.value }))} className="rounded border-2 px-2 py-1" name="credit-number" type="tel" pattern="\d*" maxLength="19" placeholder="..." />
+        <input value={progThreeValues.cn} onChange={(e) => setProgThreeValues((prev) => ({ ...prev, cn: e.target.value }))} className={`rounded border-2 px-2 py-1 ${cardValidator.detectCardType(progThreeValues.cn) !== "invalid" ? "border-green-400 outline-green-400" : "border-red-400 outline-red-400"}`} name="credit-number" type="tel" pattern="\d*" maxLength="19" placeholder="..." />
       </div>
       <div className="relative w-full grid grid-cols-1">
         <p>Expiry</p>
-        <input value={progThreeValues.expiry} onChange={(e) => setProgThreeValues((prev) => ({ ...prev, expiry: e.target.value }))} className="rounded border-2 px-2 py-1" name="credit-expires" type="tel" pattern="\d*" maxLength="5" placeholder="..." />
+        <input value={progThreeValues.expiry} onChange={(e) => setProgThreeValues((prev) => ({ ...prev, expiry: e.target.value }))} className={`rounded border-2 px-2 py-1 ${validDate() ? "border-green-400 outline-green-400" : "border-red-400 outline-red-400"}`} name="credit-expires" type="tel" pattern="\d*" maxLength="5" placeholder="..." />
       </div>
       <div className="relative w-full grid grid-cols-1">
         <p>CVV</p>
-        <input value={progThreeValues.cvv} onChange={(e) => setProgThreeValues((prev) => ({ ...prev, cvv: e.target.value }))} className="rounded border-2 px-2 py-1" name="credit-cvc" type="tel" pattern="\d*" maxLength="4" placeholder="..." />
+        <input value={progThreeValues.cvv} onChange={(e) => setProgThreeValues((prev) => ({ ...prev, cvv: e.target.value }))} className={`rounded border-2 px-2 py-1 ${cardValidator.validateCVVORCVCCode(progThreeValues.cvv) ? "border-green-400 outline-green-400" : "border-red-400 outline-red-400"}`} name="credit-cvc" type="tel" pattern="\d*" maxLength="4" placeholder="..." />
       </div>
       <div className="my-2 px-1" onClick={() => setModal(!modal)}>
         You accept and commit to following our <span className="underline text-orange-400 cursor-pointer">Terms & Conditions</span> by using this service.
@@ -51,4 +59,18 @@ export default function CreateBookingStep3({ progThreeValues, setProgThreeValues
       )}
     </form>
   );
+}
+
+
+
+function isDateInFuture(dateString) {
+  const [month, year] = dateString.split("/");
+  const inputDate = new Date();
+  inputDate.setFullYear(parseInt(year, 10));
+  inputDate.setMonth(parseInt(month, 10) - 1);
+
+  // Get the current date
+  const currentDate = new Date();
+  // Compare the input date with the current date
+  return inputDate > currentDate;
 }

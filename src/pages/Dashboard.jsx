@@ -3,14 +3,23 @@ import Datepicker from "../comp/Datepicker";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { AppContext } from "../App";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import { GridData } from "../comp/GridData";
 import { ListData } from "../comp/ListData";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { UnseatedData } from "../comp/UnseatedData";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const { venueID, date, venueLayout, updateContext, contextBookings, contextCovers, unassignedBookings } = useContext(AppContext);
+  const nav = useNavigate();
+  const [user, loading] = useAuthState(auth);
+  const { venueLayout, venueID, venueName, date, updateContext, contextBookings, contextCovers, modalData, modalUpdateDetails, unassignedBookings } = useContext(AppContext);
+
+  useEffect(() => {
+    if (!user && !loading) nav("/");
+  }, [user, nav, loading]);
+
   const [viewState, setViewState] = useState("grid");
 
   const {
@@ -53,7 +62,7 @@ export default function Dashboard() {
   }, [contextBookings, contextCovers, values]);
 
   if (isPending || error) return;
-  
+
   const sections = Object.keys(venueData?.layout || venueLayout);
   // temp code _ operational hours 7:00 -> 23:45
   const hours = Array.from({ length: 17 }, (_, i) => 7 + i);
@@ -106,7 +115,7 @@ export default function Dashboard() {
       {viewState === "grid" && venueData && (
         <div className="dashboardContent overflow-auto h-full w-full">
           <div className="grid grid-cols-1 auto-rows-max" style={{ width: `${totalGridWidth}px` }}>
-            <GetWorkingHoursAndCovers hours={hours} totalGridWidth={totalGridWidth} />
+            <GetWorkingHoursAndCovers hours={hours} totalGridWidth={totalGridWidth} values={values} />
             {Object.keys(venueData?.layout || venueLayout)
               .sort()
               .map((section, index) => {
@@ -126,7 +135,7 @@ export default function Dashboard() {
   );
 }
 
-const GetWorkingHoursAndCovers = ({ totalGridWidth, hours }) => {
+const GetWorkingHoursAndCovers = ({ totalGridWidth, hours, values }) => {
   // Function to determine whether to show the border or not
   const showBorder = (CT, minTime, maxTime) => {
     const [currentHour, currentMinute] = CT.split(":").map(Number);
@@ -141,7 +150,6 @@ const GetWorkingHoursAndCovers = ({ totalGridWidth, hours }) => {
 
   const { venueID, date, updateContext, contextBookings, contextCovers } = useContext(AppContext);
 
-  const [values] = useCollectionData(query(collection(db, "bookings"), where("venueNdate", "==", `${venueID} ${date}`)));
   if (!values) return;
   const bookings = values ? values[0]?.bookings || [] : [];
 
